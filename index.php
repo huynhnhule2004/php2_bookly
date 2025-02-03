@@ -1,4 +1,5 @@
 <?php
+ob_start();
 session_start();
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
@@ -33,7 +34,8 @@ Route::get('/blogs/{id}', 'App\Controllers\Client\BlogController@detail');
 Route::get('/blogs/categories/{id}', 'App\Controllers\Client\BlogController@getBlogByCategory');
 Route::get('/about', 'App\Controllers\Client\AboutController@index');
 
-
+Route::post('/register', 'App\Controllers\Client\AuthController@registerAction');
+Route::post('/login', 'App\Controllers\Client\AuthController@loginAction');
 
 // *** Admin
 

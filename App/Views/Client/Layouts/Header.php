@@ -9,7 +9,8 @@ class Header extends BaseView
 {
     public static function render($data = null)
     {
-
+        unset($_SESSION['user']);
+        $is_login = AuthHelper::checkLogin();
 
 ?>
 
@@ -22,7 +23,6 @@ class Header extends BaseView
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Bookly - Bookstore eCommerce Website Template</title>
             <meta http-equiv="X-UA-Compatible" content="IE=edge">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <meta name="format-detection" content="telephone=no">
             <meta name="apple-mobile-web-app-capable" content="yes">
             <meta name="author" content="">
@@ -35,6 +35,17 @@ class Header extends BaseView
             <link rel="preconnect" href="https://fonts.googleapis.com">
             <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
             <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+            <!-- SweetAlert2 CSS -->
+            <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.6/dist/sweetalert2.min.css" rel="stylesheet">
+            <!-- Thêm Toast.js CSS và JavaScript từ CDN -->
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+            <!-- SweetAlert2 CSS -->
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.6/dist/sweetalert2.all.min.js"></script>
+            <script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
+            <!-- Thêm Toast.js CSS và JavaScript từ CDN -->
+            <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+            <!-- Chart JS -->
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
             <link rel="stylesheet" href="<?= APP_URL ?>/public/assets/client/css/style.css">
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
         </head>
@@ -296,105 +307,132 @@ class Header extends BaseView
                                                 </svg>
                                             </a>
                                         </li>
-                                        <li class="pe-3">
-                                            <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                                <svg class="user">
-                                                    <use xlink:href="#user"></use>
-                                                </svg>
-                                            </a>
-                                            <!-- Modal -->
-                                            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                                                aria-hidden="true">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header border-bottom-0">
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <div class="tabs-listing">
-                                                                <nav>
-                                                                    <div class="nav nav-tabs d-flex justify-content-center" id="nav-tab" role="tablist">
-                                                                        <button class="nav-link text-capitalize active" id="nav-sign-in-tab" data-bs-toggle="tab"
-                                                                            data-bs-target="#nav-sign-in" type="button" role="tab" aria-controls="nav-sign-in"
-                                                                            aria-selected="true">Đăng nhập</button>
-                                                                        <button class="nav-link text-capitalize" id="nav-register-tab" data-bs-toggle="tab"
-                                                                            data-bs-target="#nav-register" type="button" role="tab" aria-controls="nav-register"
-                                                                            aria-selected="false">Đăng ký</button>
-                                                                        <button class="nav-link" id="nav-forgot-password-tab"
-                                                                            data-bs-toggle="tab" data-bs-target="#nav-forgot-password"
-                                                                            type="button" role="tab"
-                                                                            aria-controls="nav-forgot-password" aria-selected="false">
-                                                                            Quên mật khẩu?
-                                                                        </button>
-                                                                    </div>
-                                                                </nav>
-                                                                <div class="tab-content" id="nav-tabContent">
-                                                                    <div class="tab-pane fade active show" id="nav-sign-in" role="tabpanel"
-                                                                        aria-labelledby="nav-sign-in-tab">
-                                                                        <div class="form-group py-3">
-                                                                            <label class="mb-2" for="sign-in">Username hoặc email *</label>
-                                                                            <input type="text" minlength="2" name="username" placeholder="Nhập username hoặc email của bạn..."
-                                                                                class="form-control w-100 rounded-3 p-3" required>
+
+                                        <?php
+                                        if ($is_login) :
+                                        ?>
+                                            <li class="pe-3 dropdown show" style="display: inline-block;">
+                                                <a href="#" class="dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <svg class="user">
+                                                        <use xlink:href="#user"></use>
+                                                    </svg>
+                                                </a>
+
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                    <!-- <a class="nav-link" href="/logout">Đăng xuất</a> -->
+                                                    <a class="dropdown-item m-0" href="/users/<?= $_SESSION['user']['id'] ?>" style="font-size: medium;"><?= $_SESSION['user']['username'] ?></a>
+                                                    <a class="dropdown-item m-0" href="/change-password" style="font-size: medium;">Đổi mật khẩu</a>
+                                                    <a class="dropdown-item m-0" href="/logout" style="font-size: medium;">Đăng xuất</a>
+                                                </div>
+                                            </li>
+
+                                        <?php
+                                        else :
+                                        ?>
+                                            <li class="pe-3">
+                                                <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                                    <svg class="user">
+                                                        <use xlink:href="#user"></use>
+                                                    </svg>
+                                                </a>
+                                                <!-- Modal -->
+                                                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                                                    aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header border-bottom-0">
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="tabs-listing">
+                                                                    <nav>
+                                                                        <div class="nav nav-tabs d-flex justify-content-center" id="nav-tab" role="tablist">
+                                                                            <button class="nav-link text-capitalize active" id="nav-sign-in-tab" data-bs-toggle="tab"
+                                                                                data-bs-target="#nav-sign-in" type="button" role="tab" aria-controls="nav-sign-in"
+                                                                                aria-selected="true">Đăng nhập</button>
+                                                                            <button class="nav-link text-capitalize" id="nav-register-tab" data-bs-toggle="tab"
+                                                                                data-bs-target="#nav-register" type="button" role="tab" aria-controls="nav-register"
+                                                                                aria-selected="false">Đăng ký</button>
+                                                                            <button class="nav-link" id="nav-forgot-password-tab"
+                                                                                data-bs-toggle="tab" data-bs-target="#nav-forgot-password"
+                                                                                type="button" role="tab"
+                                                                                aria-controls="nav-forgot-password" aria-selected="false">
+                                                                                Quên mật khẩu?
+                                                                            </button>
                                                                         </div>
-                                                                        <div class="form-group pb-3">
-                                                                            <label class="mb-2" for="sign-in">Mật khẩu *</label>
-                                                                            <input type="password" minlength="2" name="password" placeholder="Nhập mật khẩu của bạn..."
-                                                                                class="form-control w-100 rounded-3 p-3" required>
+                                                                    </nav>
+                                                                    <div class="tab-content" id="nav-tabContent">
+                                                                        <div class="tab-pane fade active show" id="nav-sign-in" role="tabpanel"
+                                                                            aria-labelledby="nav-sign-in-tab">
+                                                                            <form action="/login" class="p-3" method="post">
+                                                                                <input type="hidden" name="method" value="POST">
+                                                                                <div class="form-group py-3">
+                                                                                    <label class="mb-2" for="username">Tên đăng nhập*</label>
+                                                                                    <input type="text" name="username" id="username" placeholder="Nhập tên đăng nhập của bạn..."
+                                                                                        class="form-control w-100 rounded-3 p-3" required>
+                                                                                </div>
+                                                                                <div class="form-group pb-3">
+                                                                                    <label class="mb-2" for="password">Mật khẩu*</label>
+                                                                                    <input type="password" minlength="3" name="password" id="password" placeholder="Nhập mật khẩu của bạn..."
+                                                                                        class="form-control w-100 rounded-3 p-3" required>
+                                                                                </div>
+                                                                                <div class="form-check">
+                                                                                    <label class="form-check-label">
+                                                                                        <input type="checkbox" class="form-check-input" name="remember" id="" checked>
+                                                                                        Ghi nhớ đăng nhập?
+                                                                                    </label>
+                                                                                </div>
+                                                                                <button type="submit" name="submit" class="btn btn-dark w-100 my-3">Đăng nhập</button>
+                                                                            </form>
                                                                         </div>
-                                                                        <label class="py-3">
-                                                                            <input type="checkbox" required="" class="d-inline">
-                                                                            <span class="label-body">Ghi nhớ đăng nhập?</span>
-                                                                            <!-- <span class="label-body" role="tablist">
-                                                                                <button class="nav-link" id="nav-forgot-password-tab"
-                                                                                    data-bs-toggle="tab" data-bs-target="#nav-forgot-password"
-                                                                                    type="button" role="tab"
-                                                                                    aria-controls="nav-forgot-password" aria-selected="false">
-                                                                                    Quên mật khẩu?
-                                                                                </button>
-                                                                            </span> -->
-                                                                        </label>
-                                                                        <button type="submit" name="submit" class="btn btn-dark w-100 my-3">Đăng nhập</button>
-                                                                    </div>
-                                                                    <div class="tab-pane fade" id="nav-register" role="tabpanel"
-                                                                        aria-labelledby="nav-register-tab">
-                                                                        <div class="form-group py-3">
-                                                                            <label class="mb-2" for="register">Username hoặc email*</label>
-                                                                            <input type="text" minlength="2" name="username" placeholder="Nhập username hoặc email của bạn..."
-                                                                                class="form-control w-100 rounded-3 p-3" required>
+                                                                        <div class="tab-pane fade" id="nav-register" role="tabpanel"
+                                                                            aria-labelledby="nav-register-tab">
+                                                                            <form action="/register" class="p-3" method="post">
+                                                                                <input type="hidden" name="method" value="POST">
+                                                                                <div class="form-group pb-3">
+                                                                                    <label class="mb-2" for="username">Tên đăng nhập*</label>
+                                                                                    <input type="text" minlength="2" name="username" id="username" placeholder="Nhập tên đăng nhập của bạn..."
+                                                                                        class="form-control w-100 rounded-3 p-3" required>
+                                                                                </div>
+                                                                                <div class="form-group pb-3">
+                                                                                    <label class="mb-2" for="sign-in">Mật khẩu*</label>
+                                                                                    <input type="password" minlength="2" name="password" placeholder="Nhập mật khẩu của bạn..."
+                                                                                        class="form-control w-100 rounded-3 p-3" required>
+                                                                                </div>
+                                                                                <div class="form-group pb-3">
+                                                                                    <label class="mb-2" for="sign-in">Nhập lại mật khẩu*</label>
+                                                                                    <input type="password" minlength="2" name="re_password" placeholder="Nhập lại mật khẩu của bạn..."
+                                                                                        class="form-control w-100 rounded-3 p-3" required>
+                                                                                </div>
+                                                                                <div class="form-group pb-3">
+                                                                                    <label class="mb-2" for="register">Email*</label>
+                                                                                    <input type="text" minlength="2" name="email" placeholder="Nhập email của bạn..."
+                                                                                        class="form-control w-100 rounded-3 p-3" required>
+                                                                                </div>
+                                                                                <button type="submit" name="submit" class="btn btn-dark w-100 my-3">Đăng ký</button>
+                                                                            </form>
                                                                         </div>
-                                                                        <div class="form-group pb-3">
-                                                                            <label class="mb-2" for="sign-in">Mật khẩu *</label>
-                                                                            <input type="password" minlength="2" name="password" placeholder="Nhập mật khẩu của bạn..."
-                                                                                class="form-control w-100 rounded-3 p-3" required>
+                                                                        <div class="tab-pane fade" id="nav-forgot-password" role="tabpanel"
+                                                                            aria-labelledby="nav-forgot-password-tab">
+                                                                            <div class="form-group py-3">
+                                                                                <label class="mb-2" for="sign-in">Email</label>
+                                                                                <input type="text" minlength="2" name="username" placeholder="Nhập email của bạn..."
+                                                                                    class="form-control w-100 rounded-3 p-3" required>
+                                                                            </div>
+                                                                            <button type="submit" name="submit" class="btn btn-dark w-100 my-3">Gửi</button>
                                                                         </div>
-                                                                        <div class="form-group pb-3">
-                                                                            <label class="mb-2" for="sign-in">Nhập lại mật khẩu *</label>
-                                                                            <input type="password" minlength="2" name="password" placeholder="Nhập lại mật khẩu của bạn..."
-                                                                                class="form-control w-100 rounded-3 p-3" required>
-                                                                        </div>
-                                                                        <!-- <label class="py-3">
-                                                                            <input type="checkbox" required="" class="d-inline">
-                                                                            <span class="label-body">I agree to the <a href="#" class="fw-bold">Privacy
-                                                                                    Policy</a></span>
-                                                                        </label> -->
-                                                                        <button type="submit" name="submit" class="btn btn-dark w-100 my-3">Đăng ký</button>
-                                                                    </div>
-                                                                    <div class="tab-pane fade" id="nav-forgot-password" role="tabpanel"
-                                                                        aria-labelledby="nav-forgot-password-tab">
-                                                                        <div class="form-group py-3">
-                                                                            <label class="mb-2" for="sign-in">Email</label>
-                                                                            <input type="text" minlength="2" name="username" placeholder="Nhập email của bạn..."
-                                                                                class="form-control w-100 rounded-3 p-3" required>
-                                                                        </div>
-                                                                        <button type="submit" name="submit" class="btn btn-dark w-100 my-3">Gửi</button>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </li>
+                                            </li>
+
+                                        <?php
+                                        endif;
+                                        ?>
+                                        
                                         <li class="wishlist-dropdown dropdown pe-3">
                                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">
                                                 <svg class="wishlist">

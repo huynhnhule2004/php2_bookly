@@ -14,6 +14,7 @@ class HomeController
     public static function index()
     {
         Header::render();
+        Notification::render();
         Home::render();
         Footer::render();
     }
