@@ -7,6 +7,7 @@ error_reporting(E_ALL);
 ini_set('log_errors', TRUE); 
 ini_set('error_log', './logs/php/php-errors.log');
 
+use App\Helpers\AuthHelper;
 use App\Route;
 
 require_once 'vendor/autoload.php';
@@ -15,6 +16,8 @@ $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
 require_once 'config.php';
+
+AuthHelper::middleware();
 
 
 
@@ -36,6 +39,19 @@ Route::get('/about', 'App\Controllers\Client\AboutController@index');
 
 Route::post('/register', 'App\Controllers\Client\AuthController@registerAction');
 Route::post('/login', 'App\Controllers\Client\AuthController@loginAction');
+
+Route::get('/logout', 'App\Controllers\Client\AuthController@logout');
+
+Route::get('/users/{id}', 'App\Controllers\Client\AuthController@edit');
+Route::put('/users/{id}', 'App\Controllers\Client\AuthController@update');
+
+Route::get('/change-password', 'App\Controllers\Client\AuthController@changePassword');
+Route::put('/change-password', 'App\Controllers\Client\AuthController@changePasswordAction');
+
+Route::post('/forgot-password', 'App\Controllers\Client\AuthController@forgotPasswordAction');
+
+Route::get('/reset-password', 'App\Controllers\Client\AuthController@resetPassword');
+Route::put('/reset-password', 'App\Controllers\Client\AuthController@resetPasswordAction');
 
 // *** Admin
 

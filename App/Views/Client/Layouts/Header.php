@@ -243,7 +243,7 @@ class Header extends BaseView
 
                 <nav id="header-nav" class="navbar navbar-expand-lg py-3">
                     <div class="container">
-                        <a class="navbar-brand" href="/products">
+                        <a class="navbar-brand" href="/">
                             <img src="<?= APP_URL ?>/public/assets/client/images/main-logo.png" class="logo">
                         </a>
                         <button class="navbar-toggler d-flex d-lg-none order-3 p-2" type="button" data-bs-toggle="offcanvas"
@@ -415,11 +415,19 @@ class Header extends BaseView
                                                                         <div class="tab-pane fade" id="nav-forgot-password" role="tabpanel"
                                                                             aria-labelledby="nav-forgot-password-tab">
                                                                             <div class="form-group py-3">
-                                                                                <label class="mb-2" for="sign-in">Email</label>
-                                                                                <input type="text" minlength="2" name="username" placeholder="Nhập email của bạn..."
-                                                                                    class="form-control w-100 rounded-3 p-3" required>
+                                                                                <form action="/forgot-password" class="p-3" method="post">
+                                                                                    <input type="hidden" name="method" value="POST" id="">
+                                                                                    <div class="mb-3">
+                                                                                        <label for="username">Tên đăng nhập*</label>
+                                                                                        <input type="text" name="username" id="username" class="form-control" placeholder="Nhập tên đăng nhập của bạn..." required>
+                                                                                    </div>
+                                                                                    <div class="mb-3">
+                                                                                        <label for="email">Email*</label>
+                                                                                        <input type="email" name="email" id="email" class="form-control" placeholder="Nhập email của bạn..." required>
+                                                                                    </div>
+                                                                                    <button type="submit" name="submit" class="btn btn-dark w-100 my-3">Gửi</button>
+                                                                                </form>
                                                                             </div>
-                                                                            <button type="submit" name="submit" class="btn btn-dark w-100 my-3">Gửi</button>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -432,7 +440,7 @@ class Header extends BaseView
                                         <?php
                                         endif;
                                         ?>
-                                        
+
                                         <li class="wishlist-dropdown dropdown pe-3">
                                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">
                                                 <svg class="wishlist">

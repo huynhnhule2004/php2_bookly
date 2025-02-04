@@ -150,16 +150,16 @@ class AuthController
 
     public static function edit($id)
     {
-        $category = new Category();
-        $categories = $category->getAllByStatus();
+        // $category = new Category();
+        // $categories = $category->getAllByStatus();
 
-        $product = new Product();
-        $products = $product->getAllProductByStatus();
+        // $product = new Product();
+        // $products = $product->getAllProductByStatus();
 
-        $data = [
-            'products' => $products,
-            'categories' => $categories
-        ];
+        // $data = [
+        //     'products' => $products,
+        //     'categories' => $categories
+        // ];
 
         $result = AuthHelper::edit($id);
 
@@ -179,14 +179,10 @@ class AuthController
         }
 
         $data = $_SESSION['user'];
-        Header::render($data);
+        Header::render();
         Notification::render();
         NotificationHelper::unset();
-        //Giao diện thông tin user
-
         Edit::render($data);
-        // var_dump($data);
-
         Footer::render();
     }
 
@@ -202,7 +198,10 @@ class AuthController
 
         $data = [
             'email' => $_POST['email'],
-            'name' => $_POST['name']
+            'name' => $_POST['name'],
+            'date_of_birth' => $_POST['date_of_birth'],
+            'phone_number' => $_POST['phone_number'],
+            'address' => $_POST['address'],
         ];
 
         //kiểm tra có upload hình ảnh không, nếu có: kiểm tra xem có hợp lệ không
@@ -221,16 +220,16 @@ class AuthController
     //Hiển thị form đổi mật khẩu
     public static function changePassword()
     {
-        $category = new Category();
-        $categories = $category->getAllByStatus();
+        // $category = new Category();
+        // $categories = $category->getAllByStatus();
 
-        $product = new Product();
-        $products = $product->getAllProductByStatus();
+        // $product = new Product();
+        // $products = $product->getAllProductByStatus();
 
-        $data = [
-            'products' => $products,
-            'categories' => $categories
-        ];
+        // $data = [
+        //     'products' => $products,
+        //     'categories' => $categories
+        // ];
 
         $is_login = AuthHelper::checkLogin();
 
@@ -274,26 +273,6 @@ class AuthController
         header('location: /change-password');
     }
 
-    //Hiển thị giao diện form lấy lại mật khẩu
-    public static function forgotPassword()
-    {
-        $category = new Category();
-        $categories = $category->getAllByStatus();
-
-        $product = new Product();
-        $products = $product->getAllProductByStatus();
-
-        $data = [
-            'products' => $products,
-            'categories' => $categories
-        ];
-
-        Header::render($data);
-        Notification::render();
-        NotificationHelper::unset();
-        ForgotPassword::render();
-        Footer::render();
-    }
 
     //Thực hiện lấy lại mật khẩu
 
@@ -304,7 +283,7 @@ class AuthController
 
         if (!$is_valid) {
             NotificationHelper::error('forgot_password', 'Lấy lại mật khẩu thất bại');
-            header('location: /forgot-password');
+            header('location: /');
             exit;
         }
 
@@ -320,13 +299,13 @@ class AuthController
 
         if (!$result) {
             NotificationHelper::error('username_exist', 'Không tồn tại tài khoản này');
-            header('location: /forgot-password');
+            header('location: /');
             exit;
         }
 
         if ($result['email'] != $email) {
             NotificationHelper::error('email_exist', 'Email không đúng');
-            header('location: /forgot-password');
+            header('location: /');
             exit;
         }
 
@@ -343,24 +322,24 @@ class AuthController
     //Hiển thị giao diện form lấy lại mật khẩu
     public static function resetPassword()
     {
-        $category = new Category();
-        $categories = $category->getAllByStatus();
+        // $category = new Category();
+        // $categories = $category->getAllByStatus();
 
-        $product = new Product();
-        $products = $product->getAllProductByStatus();
+        // $product = new Product();
+        // $products = $product->getAllProductByStatus();
 
-        $data = [
-            'products' => $products,
-            'categories' => $categories
-        ];
+        // $data = [
+        //     'products' => $products,
+        //     'categories' => $categories
+        // ];
 
         if (!isset($_SESSION['reset_password'])) {
-            NotificationHelper::error('reset_password', 'Vui lòng nhập đầy đủ thông tin của form này');
-            header('location: /forgot-password');
+            NotificationHelper::error('reset_password', 'Vui lòng nhập tên đăng nhập và email để lấy lại mật khẩu');
+            header('location: /');
             exit;
         }
 
-        Header::render($data);
+        Header::render();
         Notification::render();
         NotificationHelper::unset();
         ResetPassword::render();
@@ -392,7 +371,7 @@ class AuthController
         if ($result) {
             NotificationHelper::success('reset_password', 'Đặt lại mật khẩu thành công');
             unset($_SESSION['reset_password']);
-            header('location: /login');
+            header('location: /');
         } else {
             NotificationHelper::error('reset_password', 'Đặt lại mật khẩu thất bại');
             header('location: /reset-password');

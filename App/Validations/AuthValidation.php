@@ -107,6 +107,41 @@ class AuthValidation
             $is_valid = false;
         }
 
+        // Kiểm tra Ngày sinh
+        if (empty($_POST['date_of_birth'])) {
+            NotificationHelper::error('date_of_birth', 'Không để trống ngày sinh');
+            $is_valid = false;
+        } else {
+            // Kiểm tra nếu ngày sinh lớn hơn ngày hiện tại
+            $date_of_birth = $_POST['date_of_birth'];
+            $current_date = date('Y-m-d'); // Lấy ngày hiện tại ở định dạng 'YYYY-MM-DD'
+
+            if ($date_of_birth > $current_date) {
+                NotificationHelper::error('date_of_birth', 'Ngày sinh không được lớn hơn ngày hiện tại');
+                $is_valid = false;
+            }
+        }
+
+        // Kiểm tra Số điện thoại
+        if (empty($_POST['phone_number'])) {
+            NotificationHelper::error('phone_number', 'Không để trống số điện thoại');
+            $is_valid = false;
+        } else {
+            // Kiểm tra định dạng số điện thoại (giả sử chỉ cho phép số và có độ dài từ 10 đến 15 ký tự)
+            $phone_number = $_POST['phone_number'];
+
+            if (!preg_match('/^[0-9]{10,15}$/', $phone_number)) {
+                NotificationHelper::error('phone_number', 'Số điện thoại không hợp lệ');
+                $is_valid = false;
+            }
+        }
+
+        // Địa chỉ
+        if (!isset($_POST['address']) || $_POST['address'] === '') {
+            NotificationHelper::error('address', 'Không để trống địa chỉ');
+            $is_valid = false;
+        }
+
         return $is_valid;
     }
 
