@@ -18,7 +18,7 @@ class Footer extends BaseView
                             <div class="col-lg-3 col-sm-6 pb-3">
                                 <div class="footer-menu">
                                     <img src="<?= APP_URL ?>/public/assets/client/images/main-logo.png" alt="logo" class="img-fluid mb-2">
-                                    <p>Chào mừng bạn đến với Bookly! Tại đây chuyên cung cấp các sản phẩm chất lượng cho công việc và học tập. Mua sắm tiện lợi, giao hàng nhanh chóng!.</p>
+                                    <p>Chào mừng bạn đến với Bookly! Tại đây chuyên cung cấp các sản phẩm chất lượng cho công việc và học tập. Mua sắm tiện lợi, giao hàng nhanh chóng!</p>
                                     <div class="social-links">
                                         <ul class="d-flex list-unstyled">
                                             <li>
@@ -145,7 +145,7 @@ class Footer extends BaseView
                 </div>
             </div>
         </div>
-
+        <script lang="javascript">var __vnp = {code : 23609,key:'', secret : '9fc00ace2dd2671f429cb46a14ceb0ec'};(function() {var ga = document.createElement('script');ga.type = 'text/javascript';ga.async=true; ga.defer=true;ga.src = 'https://core.vchat.vn/code/tracking.js?v=95821'; var s = document.getElementsByTagName('script');s[0].parentNode.insertBefore(ga, s[0]);})();</script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

@@ -13,6 +13,7 @@ use App\Views\Admin\Pages\Order\Create;
 use App\Views\Admin\Pages\Order\Edit;
 use App\Views\Admin\Pages\Order\Index;
 use App\Validations\CategoryValidation;
+use App\Validations\OrderValidation;
 use App\Views\Admin\Pages\Order\Detail;
 use App\Views\Admin\Pages\Order\Search;
 
@@ -23,51 +24,9 @@ class OrderController
     // hiển thị danh sách
     public static function index()
     {
-        // $order = new Order();
-        // $data = $order->getAllOrderAndNameUser();
-        $data = [
-            [
-                'id' => 1,
-                'first_name' => 'Nguyễn Văn A',
-                'total_price' => 1500000,
-                'status' => 'Pending',
-                'payment_method' => 'COD',
-                'payment_status' => 'Unpaid',
-            ],
-            [
-                'id' => 2,
-                'first_name' => 'Trần Thị B',
-                'total_price' => 2000000,
-                'status' => 'Shipped',
-                'payment_method' => 'Online',
-                'payment_status' => 'Paid',
-            ],
-            [
-                'id' => 3,
-                'first_name' => 'Phạm Văn C',
-                'total_price' => 500000,
-                'status' => 'Delivered',
-                'payment_method' => 'COD',
-                'payment_status' => 'Paid',
-            ],
-            [
-                'id' => 4,
-                'first_name' => 'Lê Thị D',
-                'total_price' => 750000,
-                'status' => 'Cancelled',
-                'payment_method' => 'Online',
-                'payment_status' => 'Refunded',
-            ],
-            [
-                'id' => 5,
-                'first_name' => 'Hoàng Văn E',
-                'total_price' => 1200000,
-                'status' => 'Pending',
-                'payment_method' => 'Online',
-                'payment_status' => 'Unpaid',
-            ],
-        ];
-
+        $order = new Order();
+        $data = $order->getAllOrderAndNameUser();
+       
         $currentPage = isset($_GET['page']) ? (int) $_GET['page'] : 1;
         $itemsPerPage = 10;
 
@@ -81,11 +40,12 @@ class OrderController
 
         $offset = ($currentPage - 1) * $itemsPerPage;
         $pageData = array_slice($data, $offset, $itemsPerPage);
-
+        // echo "<pre/>";
+        // var_dump($pageData);
+        // die();
         Header::render();
-        // Notification::render();
-        // NotificationHelper::unset();
-        // Truyền $totalItems vào view để tính toán phân trang
+        Notification::render();
+        NotificationHelper::unset();
         Index::render($pageData, $currentPage, $itemsPerPage, $totalItems);
         Footer::render();
     }
@@ -172,29 +132,18 @@ class OrderController
     // hiển thị giao diện form sửa
     public static function edit(int $id)
     {
-        // $order = new Order();
-        // $data = $order->getOneOrder($id);
+        $order = new Order();
+        $data = $order->getOneOrder($id);
 
-        // if (!$data) {
-        //     NotificationHelper::error('edit', 'Không thể xem loại sản phẩm này');
-        //     header('location: /admin/categories/');
-        //     exit;
-        // }
-        $data = [
-            'id' => $id,
-            'user_id' => 'USR123',
-            'first_name' => 'Như',
-            'last_name' => 'Huỳnh',
-            'total_price' => 350000,
-            'phone_number' => '0912345678',
-            'shipping_address' => '123 Đường ABC, Phường DEF, Quận GHI, TP. Hồ Chí Minh',
-            'status' => 'Shipped', // Có thể là 'Pending', 'Shipped', 'Delivered', 'Cancelled'
-            'payment_method' => 'COD', // Có thể là 'COD', 'Online payment'
-            'payment_status' => 'Unpaid', // Có thể là 'Paid', 'Unpaid', 'Refunded'
-        ];
+        if (!$data) {
+            NotificationHelper::error('edit', 'Không thể xem loại sản phẩm này');
+            header('location: /admin/orders/');
+            exit;
+        }
+
         Header::render();
-        // Notification::render();
-        // NotificationHelper::unset();
+        Notification::render();
+        NotificationHelper::unset();
         // hiển thị form sửa
         Edit::render($data);
         Footer::render();
@@ -204,141 +153,154 @@ class OrderController
     // xử lý chức năng sửa (cập nhật)
     public static function update(int $id)
     {
-        // $order = new Order();
-
-        // // Thực hiện cập nhật
-        // $data = [
-        //     'user_id' => $_POST['user_id'],
-        //     'total_price' => $_POST['total_price'],
-        //     'status' => $_POST['status'],
-        //     'phone_number' => $_POST['phone_number'],
-        //     'shipping_address' => $_POST['shipping_address'],
-        //     'payment_method' => $_POST['payment_method'],
-        //     'payment_status' => $_POST['payment_status'],
-        // ];
-
-        // $result = $order->updateOrder($id, $data);
-
-        // if ($result) {
-        //     NotificationHelper::success('update', 'Cập nhật đơn hàng thành công');
-        //     header('location: /admin/orders');
-        // } else {
-        //     NotificationHelper::error('update', 'Cập nhật đơn hàng thất bại');
-        //     header("location: /admin/orders/$id");
-        // }
-        // var_dump($_POST);
-        // exit;
+        $order = new Order();
+    
+        if (empty($_POST)) {
+            NotificationHelper::error('update', 'Không có dữ liệu được gửi!');
+            header("location: /admin/orders/$id");
+            exit;
+        }
+    
+        $user_id = $_POST['user_id'] ?? null;
+        $total_price = $_POST['total_price'] ?? null;
+        $status = $_POST['status'] ?? null;
+        $phone_number = $_POST['phone_number'] ?? null;
+        $shipping_address = $_POST['shipping_address'] ?? null;
+        $payment_method = $_POST['payment_method'] ?? null;
+        $payment_status = $_POST['payment_status'] ?? null;
+    
+        $currentOrder = $order->getOne($id);
+        if (!$currentOrder) {
+            NotificationHelper::error('update', 'Đơn hàng không tồn tại!');
+            header("location: /admin/orders");
+            exit;
+        }
+    
+        $errors = OrderValidation::validate(
+            $user_id, 
+            $total_price, 
+            $status, 
+            $phone_number, 
+            $shipping_address, 
+            $payment_method, 
+            $payment_status, 
+            $currentOrder
+        );
+    
+        if (!empty($errors)) {
+            foreach ($errors as $error) {
+                NotificationHelper::error('update', $error);
+            }
+            header("location: /admin/orders/$id");
+            exit;
+        }
+    
+        $data = [
+            'user_id' => $user_id,
+            'total_price' => $total_price,
+            'status' => $status,
+            'phone_number' => $phone_number,
+            'shipping_address' => $shipping_address,
+            'payment_method' => $payment_method,
+            'payment_status' => $payment_status,
+        ];
+    
+        // 🛠 Thực hiện cập nhật trong DB
+        $result = $order->updateOrder($id, $data);
+    
+        if ($result) {
+            NotificationHelper::success('update', 'Cập nhật đơn hàng thành công!');
+            header('location: /admin/orders');
+        } else {
+            NotificationHelper::error('update', 'Cập nhật đơn hàng thất bại! Hãy thử lại.');
+            header("location: /admin/orders/$id");
+        }
+        exit;
     }
+    
+    
+    
 
 
     // thực hiện xoá
     public static function delete(int $id)
     {
-        // $order = new Order();
-        // $result = $order->deleteOrder($id);
+        $order = new Order();
+        $result = $order->deleteOrder($id);
 
-        // // var_dump($result);
-        // if ($result) {
-        //     NotificationHelper::success('delete', 'Xóa đơn hàng thành công');
-        // } else {
-        //     NotificationHelper::error('delete', 'Xóa đơn hàng thất bại');
-        // }
+        // var_dump($result);
+        if ($result) {
+            NotificationHelper::success('delete', 'Xóa đơn hàng thành công');
+        } else {
+            NotificationHelper::error('delete', 'Xóa đơn hàng thất bại');
+        }
 
         header('location: /admin/orders');
     }
 
     public static function search()
     {
-        // // $statusMapping = [
-        // //     'đang chờ xử lý' => 'Pending',
-        // //     'đang giao' => 'Shipped',
-        // //     'đã giao' => 'Delivered',
-        // //     'đã hủy' => 'Cancelled'
-        // // ];
-        // if (!isset($_GET['keyword']) || $_GET['keyword'] == '') {
+        // $statusMapping = [
+        //     'đang chờ xử lý' => 'Pending',
+        //     'đang giao' => 'Shipped',
+        //     'đã giao' => 'Delivered',
+        //     'đã hủy' => 'Cancelled'
+        // ];
+        if (!isset($_GET['keyword']) || $_GET['keyword'] == '') {
+            header('location: /admin/orders');
+            exit();
+        }
+
+        $keyword = urldecode($_GET['keyword']);
+        // $keyword1 = mb_strtolower($keyword);
+        // $statusEnglish = $statusMapping[$keyword1] ?? null;
+        // if ($statusEnglish === null) {
+        //     NotificationHelper::error('invalid_status', 'Trạng thái không hợp lệ');
         //     header('location: /admin/orders');
         //     exit();
         // }
+        $order = new Order();
+        $data = $order->searchByStatus($keyword);
 
-        // $keyword = urldecode($_GET['keyword']);
-        // // $keyword1 = mb_strtolower($keyword);
-        // // $statusEnglish = $statusMapping[$keyword1] ?? null;
-        // // if ($statusEnglish === null) {
-        // //     NotificationHelper::error('invalid_status', 'Trạng thái không hợp lệ');
-        // //     header('location: /admin/orders');
-        // //     exit();
-        // // }
-        // $order = new Order();
-        // $data = $order->searchByStatus($keyword);
+        $currentPage = isset($_GET['page']) ? (int) $_GET['page'] : 1;
+        $itemsPerPage = 10;
 
-        // $currentPage = isset($_GET['page']) ? (int) $_GET['page'] : 1;
-        // $itemsPerPage = 10;
+        $totalItems = count($data);
+        $totalPages = ceil($totalItems / $itemsPerPage);
 
-        // $totalItems = count($data);
-        // $totalPages = ceil($totalItems / $itemsPerPage);
+        if ($currentPage < 1)
+            $currentPage = 1;
+        if ($currentPage > $totalPages)
+            $currentPage = $totalPages;
 
-        // if ($currentPage < 1)
-        //     $currentPage = 1;
-        // if ($currentPage > $totalPages)
-        //     $currentPage = $totalPages;
-
-        // $offset = ($currentPage - 1) * $itemsPerPage;
-        // $pageData = array_slice($data, $offset, $itemsPerPage);
-        // // $statusEnglish = $statusMapping[$keyword1] ?? null;
+        $offset = ($currentPage - 1) * $itemsPerPage;
+        $pageData = array_slice($data, $offset, $itemsPerPage);
+        // $statusEnglish = $statusMapping[$keyword1] ?? null;
 
 
-        // // echo "<pre>";
-        // // var_dump($data);
+        // echo "<pre>";
+        // var_dump($data);
 
-        // Header::render($data);
-        // Notification::render();
-        // NotificationHelper::unset();
-        // Search::render($pageData, $currentPage, $itemsPerPage, $totalItems);
-        // Footer::render();
+        Header::render($data);
+        Notification::render();
+        NotificationHelper::unset();
+        Search::render($pageData, $currentPage, $itemsPerPage, $totalItems);
+        Footer::render();
     }
 
     public static function detail($id)
     {
-        // $order = new Order();
-        // $orders = $order->getOneOrder($id);
-        // $order_detail = new OrderDetail();
-        // $order_details = $order_detail->getAllOrderDetailByOrderId($id);
-        $order = [
-            'id' => $id,
-            'first_name' => 'Như',
-            'last_name' => 'Huỳnh',
-            'total_price' => 350000,
-            'created_at' => '2025-01-15 10:30:00',
-            'updated_at' => '2025-01-20 15:00:00',
-            'status' => 'Shipped',
-            'phone_number' => '0912345678',
-            'shipping_address' => '123 Đường ABC, Phường DEF, Quận GHI, TP. Hồ Chí Minh',
-            'payment_method' => 'COD',
-            'payment_status' => 'Unpaid',
-        ];
+        $order = new Order();
+        $orders = $order->getOneOrder($id);
+        $order_detail = new OrderDetail();
+        $order_details = $order_detail->getAllOrderDetailByOrderId($id);
 
-        // Dữ liệu giả cho chi tiết sản phẩm trong đơn hàng
-        $orderDetails = [
-            [
-                'image' => 'product.jpg',
-                'product_name' => 'Sản phẩm 1',
-                'quantity' => 2,
-                'price' => 100000,
-            ],
-            [
-                'image' => 'product.jpg',
-                'product_name' => 'Sản phẩm 2',
-                'quantity' => 1,
-                'price' => 150000,
-            ],
-        ];
 
         Header::render();
-        // Notification::render();
-        // NotificationHelper::unset();
-
+        Notification::render();
+        NotificationHelper::unset();
         // Truyền $totalItems vào view để tính toán phân trang
-        Detail::render($order, $orderDetails);
+        Detail::render($orders, $order_details);
         Footer::render();
     }
 }

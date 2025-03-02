@@ -30,7 +30,7 @@ class Index extends BaseView
       <div class="row">
         <div class="col-md-3">
           <?php
-          BlogCategory::render($data['categories']);
+          BlogCategory::render($data['blog_categories']);
           ?>
         </div>
         <div class="col-md-9">
@@ -50,10 +50,11 @@ class Index extends BaseView
               foreach ($data['blogs'] as $item) :
               ?>
                 <div class="col-md-4 posts mb-4">
-                  <img src="<?= APP_URL ?>/public/assets/client/images/post-item1.jpg" alt="post image" class="img-fluid rounded-3">
-                  <a href="blog.html" class="fs-6 text-primary">Sách</a>
-                  <h4 class="card-title mb-2 text-capitalize text-dark"><a href="/blogs/1">10 Cuốn Sách Phải Đọc Trong Năm: Lựa Chọn Hàng Đầu Của Chúng Tôi!</a></h4>
-                  <p class="mb-2">Khám phá thế giới công nghệ tiên tiến với bài viết blog mới nhất của chúng tôi, nơi chúng tôi giới thiệu năm thiết bị công nghệ thiết yếu... <span><a class="text-decoration-underline text-black-50" href="/blogs/1">Đọc thêm</a></span>
+                  <img src="<?= APP_URL ?>public/uploads/blogs/<?= $item['image'] ?>" alt="post image" class="img-fluid rounded-3">
+                  <a href="/blogs/<?= $item['id'] ?>" class="fs-6 text-primary"><?= $item['category_name'] ?></a>
+                  <h4 class="card-title mb-2 text-capitalize text-dark"><a href="/blogs/<?= $item['id'] ?>"><?= mb_strimwidth($item['title'], 0, 50, "...") ?></a></h4>
+                  <p class="mb-2"><?= mb_strimwidth($item['content'], 0, 100, "...") ?>
+                  <span><a class="text-decoration-underline text-black-50" href="/blogs/<?= $item['id'] ?>">Đọc thêm</a></span>
                   </p>
                 </div>
               <?php

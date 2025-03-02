@@ -56,8 +56,7 @@ class Index extends BaseView
                                                             <th style="white-space: nowrap;">ID</th>
                                                             <th style="white-space: nowrap;">Ảnh đại diện</th>
                                                             <th style="white-space: nowrap;">Tên đăng nhập</th>
-                                                            <th style="white-space: nowrap;">Tên</th>
-                                                            <th style="white-space: nowrap;">Họ</th>
+                                                            <th style="white-space: nowrap;">Họ và tên</th>
                                                             <th style="white-space: nowrap;">Email</th>
                                                             <th style="white-space: nowrap;">Số điện thoại</th>
                                                             <th style="white-space: nowrap;">Địa chỉ</th>
@@ -73,8 +72,7 @@ class Index extends BaseView
                                                                 <td style="white-space: nowrap;"><?= $item['id'] ?></td>
                                                                 <td style="white-space: nowrap;"><img src="<?= APP_URL ?>/public/uploads/users/<?= $item['avatar'] ?>" alt="" width="50px"></td>
                                                                 <td style="white-space: nowrap;"><?= $item['username'] ?></td>
-                                                                <td style="white-space: nowrap;"><?= $item['first_name'] ?></td>
-                                                                <td style="white-space: nowrap;"><?= $item['last_name'] ?></td>
+                                                                <td style="white-space: nowrap;"><?= $item['name'] ?></td>
                                                                 <td style="white-space: nowrap;"><?= $item['email'] ?></td>
                                                                 <td style="white-space: nowrap;"><?= $item['phone_number'] ?></td>
                                                                 <td style="white-space: nowrap;"><?= $item['address'] ?></td>

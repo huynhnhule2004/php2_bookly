@@ -3,6 +3,9 @@
 namespace App\Helpers;
 
 use App\Models\User;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\SMTP;
 
 class AuthHelper
 {
@@ -258,15 +261,283 @@ class AuthHelper
 
             if (!isset($_SESSION['user'])) {
                 NotificationHelper::error('admin', 'Vui lòng đăng nhập');
-                header('location: /login');
+                header('location: /');
                 exit;
             }
 
             if ($_SESSION['user']['role'] != 'admin') {
                 NotificationHelper::error('admin', 'Tài khoản này không có quyền truy cập');
-                header('location: /login');
+                header('location: /');
                 exit;
             }
+        }
+    }
+
+    public static function sendEmail($to, $name, $message)
+    {
+        header('Content-Type: text/html; charset=utf-8');
+        $mail = new PHPMailer(true);
+        try {
+            //Server settings
+            $mail->SMTPDebug = SMTP::DEBUG_SERVER;
+            $mail->isSMTP();
+            $mail->Host       = 'smtp.gmail.com';
+            $mail->SMTPAuth   = true;
+            $mail->Username   = 'huynhnhule2004@gmail.com';
+            $mail->Password   = 'gkoc tsak dhir eoob';
+            $mail->SMTPSecure = 'tls';
+            $mail->Port       = '587';
+
+            $mail->setFrom('huynhnhule2004@gmail.com', 'Bookly');
+            $mail->addAddress($to, $name);
+            $mail->addReplyTo('huynhnhule2004@gmail.com', 'Bookly');
+
+            // Content for customer
+            $customerBody = "
+        <div style='font-family: Arial, sans-serif; line-height: 1.6; color: #333; background-color: #f9f9f9; padding: 20px; border: 1px solid #ddd; border-radius: 8px;'>
+            <h2 style='color: #DEAD6F;'>Cảm ơn bạn đã liên hệ Bookly!</h2>
+            <p>Chúng tôi đã nhận được lời nhắn từ bạn và sẽ phản hồi sớm nhất có thể.</p>
+            <div style='padding: 10px; border: 1px solid #DEAD6F; border-radius: 5px; background-color: #fff;'>
+                <strong>Lời nhắn của bạn:</strong>
+                <p style='font-style: italic; color: #555;'>{$message}</p>
+            </div>
+            <p style='margin-top: 20px;'>Trân trọng,</p>
+            <p><strong>Đội ngũ Bookly</strong></p>
+        </div>";
+            $mail->isHTML(true);
+            $mail->Subject = 'Contact of Bookly';
+            $mail->Body = $customerBody;
+            $mail->AltBody = "Cảm ơn bạn đã liên hệ! Lời nhắn của bạn: {$message}";
+            $mail->send();
+
+            // Content for admin
+            $adminBody = "
+        <div style='font-family: Arial, sans-serif; line-height: 1.6; color: #333; background-color: #f9f9f9; padding: 20px; border: 1px solid #ddd; border-radius: 8px;'>
+            <h2 style='color: #DEAD6F;'>Thông tin liên hệ từ khách hàng</h2>
+            <div style='padding: 10px; border: 1px solid #DEAD6F; border-radius: 5px; background-color: #fff;'>
+                <p><strong>Tên: </strong>{$name}</p>
+                <p><strong>Email: </strong>{$to}</p>
+                <p><strong>Điện thoại: </strong>{$_POST['phone']}</p>
+                <p><strong>Lời nhắn:</strong><br>{$message}</p>
+            </div>
+        </div>";
+            $mail->clearAddresses();
+            $mail->addAddress('huynhnhule2004@gmail.com', 'Bookly Admin');
+            $mail->Subject = 'Customer contact information - Bookly';
+            $mail->Body = $adminBody;
+            $mail->AltBody = "Lời nhắn từ khách hàng: {$name} - {$message}";
+            $mail->send();
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+
+    public static function sendEmailOrder($to, $name, $orderId, $totalAmount, $orderDate, $paymentMethod, $data)
+    {
+        $details = $data['order_details'];
+
+        // Tạo nội dung chi tiết sản phẩm trong email cho khách hàng
+        ob_start();
+?>
+        <table style="border-collapse: collapse;" border="1">
+            <thead>
+                <tr>
+                    <th>Tên sản phẩm</th>
+                    <th>Kích thước/ Trọng lượng</th>
+                    <th>Giá</th>
+                    <th>Số lượng</th>
+                    <th>Tổng</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($details as $product) : ?>
+                    <tr>
+                        <td><?= htmlspecialchars($product['product_name']) ?></td>
+                        <td><?= htmlspecialchars($product['variant_name']) ?></td>
+                        <td><?= number_format($product['price'], 0, ',', '.') ?> VNĐ</td>
+                        <td><?= htmlspecialchars($product['quantity']) ?></td>
+                        <td><?= number_format($product['price'] * $product['quantity'], 0, ',', '.') ?> VNĐ</td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+<?php
+        $productTable = ob_get_clean();
+
+        // Tạo nội dung email cho khách hàng
+        $body = "
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                line-height: 1.6;
+                color: #333;
+                margin: 20px;
+                padding: 10px;
+            }
+            p {
+                margin: 10px 0;
+            }
+            ul {
+                list-style: none;
+                padding: 0;
+                margin: 10px 0;
+            }
+            li {
+                margin-bottom: 8px;
+            }
+            strong {
+                color: #2c3e50;
+            }
+            .order-details {
+                background-color: #f9f9f9;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                padding: 15px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            .table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 15px;
+            }
+            .table th, .table td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: center;
+            }
+            .table th {
+                background-color: #f2f2f2;
+            }
+            .footer {
+                margin-top: 20px;
+                font-style: italic;
+                color: #555;
+            }
+            .footer strong {
+                color: #2c3e50;
+            }
+        </style>
+        <p>Kính gửi <strong>$name</strong>,</p>
+        <p>Cảm ơn bạn đã đặt hàng tại <strong>Bookly</strong>! Chúng tôi rất vui mừng thông báo rằng đơn hàng của bạn đã được tiếp nhận và đang được xử lý. Dưới đây là thông tin chi tiết về đơn hàng:</p>
+        <div class='order-details'>
+            <p><strong>Thông tin đơn hàng:</strong></p>
+            <ul>
+                <li><strong>Mã đơn hàng:</strong> $orderId</li>
+                <li><strong>Ngày đặt hàng:</strong> $orderDate</li>
+                <li><strong>Phương thức thanh toán:</strong> $paymentMethod</li>
+                <li><strong>Trạng thái thanh toán:</strong> Đã thanh toán</li>
+                <li><strong>Tổng giá trị đơn hàng:</strong> " . number_format($totalAmount, 0, ',', '.') . " VNĐ</li>
+            </ul>
+            <h4>Sản phẩm đã đặt</h4>
+            $productTable
+        </div>
+        <p>Chúng tôi sẽ liên hệ lại với bạn ngay khi đơn hàng được xử lý.</p>
+        <p class='footer'><strong>Trân trọng,</strong><br>Đội ngũ Bookly</p>
+        ";
+
+
+        // Cấu hình gửi email
+        header('Content-Type: text/html; charset=utf-8');
+        $mail = new PHPMailer(true);
+        try {
+            // Cấu hình máy chủ gửi email SMTP
+            $mail->isSMTP();
+            $mail->Host = 'smtp.gmail.com';
+            $mail->SMTPAuth = true;
+            $mail->Username = 'huynhnhule2004@gmail.com';
+            $mail->Password = 'gkoc tsak dhir eoob'; // Nên sử dụng biến môi trường hoặc cách bảo mật khác
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port = 587;
+
+            // Đặt người gửi và người nhận
+            $mail->setFrom('huynhnhule2004@gmail.com', 'Bookly');
+            $mail->addAddress($to, $name);
+            $mail->addReplyTo('huynhnhule2004@gmail.com', 'Bookly');
+
+            // Nội dung email cho khách hàng
+            $mail->isHTML(true);
+            $mail->Subject = 'Order at Bookly';
+            $mail->Body = $body;
+
+            // Gửi email đến khách hàng
+            $mail->send();
+
+            // Gửi email thông báo đến Admin
+            $adminBody = "
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        line-height: 1.6;
+                        color: #333;
+                        margin: 20px;
+                        padding: 10px;
+                    }
+                    p {
+                        margin: 10px 0;
+                    }
+                    ul {
+                        list-style: none;
+                        padding: 0;
+                        margin: 10px 0;
+                    }
+                    li {
+                        margin-bottom: 8px;
+                    }
+                    strong {
+                        color: #2c3e50;
+                    }
+                    .admin-details {
+                        background-color: #eaf0f8;
+                        border: 1px solid #b0c7d7;
+                        border-radius: 8px;
+                        padding: 15px;
+                        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                    }
+                    .admin-footer {
+                        margin-top: 20px;
+                        font-style: italic;
+                        color: #555;
+                    }
+                    .header {
+                        font-size: 1.2em;
+                        margin-bottom: 15px;
+                        color: #2c3e50;
+                    }
+                </style>
+                <p class='header'>Thông báo mới: Đơn hàng được đặt trên hệ thống</p>
+                <p>Kính gửi Admin,</p>
+                <p>Đơn hàng mới đã được tiếp nhận trên hệ thống. Dưới đây là thông tin chi tiết về đơn hàng:</p>
+                <div class='admin-details'>
+                    <p><strong>Thông tin đơn hàng:</strong></p>
+                    <ul>
+                        <li><strong>Mã đơn hàng:</strong> $orderId</li>
+                        <li><strong>Tên khách hàng:</strong> $name</li>
+                        <li><strong>Ngày đặt hàng:</strong> $orderDate</li>
+                        <li><strong>Phương thức thanh toán:</strong> $paymentMethod</li>
+                        <li><strong>Trạng thái thanh toán:</strong> Đã thanh toán</li>
+                        <li><strong>Tổng giá trị đơn hàng:</strong> " . number_format($totalAmount) . " VNĐ</li>
+                    </ul>
+                </div>
+                <p>Vui lòng kiểm tra và xử lý đơn hàng càng sớm càng tốt.</p>
+                <p class='admin-footer'><strong>Trân trọng,</strong><br>Hệ thống Bookly</p>
+            ";
+
+            $mail->clearAddresses();
+            $mail->addAddress('huynhnhule2004@gmail.com', 'Bookly Admin');
+            $mail->Subject = 'Customer contact information - Bookly';
+            $mail->Body = $adminBody;
+
+            // Gửi email đến Admin
+            $mail->send();
+
+            return true;
+        } catch (Exception $e) {
+            // Trả về thông báo lỗi nếu có vấn đề trong việc gửi email
+            error_log("Không thể gửi email. Lỗi: {$mail->ErrorInfo}");
+            return false;
         }
     }
 }

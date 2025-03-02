@@ -21,119 +21,108 @@ use App\Views\Client\Pages\Product\Index;
 class CartController
 {
     // hiển thị danh sách
-    // public static function add()
-    // {
-
-    //     $category = new Category();
-    //     $categories = $category->getAllByStatus();
-
-    //     $product = new Product();
-    //     $products = $product->getAllProductByStatus();
-
-    //     $id = $_POST['id'];
-
-    //     // Fetch the product from the model
-    //     $productModel = new Product();
-    //     $product = $productModel->getOneProduct($id);
-
-    //     // Add the product to the cart
-    //     $cartModel = new Cart;
-    //     $result = $cartModel->addProduct($product);
-
-    //     header('location: /cart/show');
-
-    //     // Debugging: Print the cart session
-    //     // echo "<pre>";
-    //     // var_dump($_SESSION['cart']);
-    //     // $data = [
-    //     //     'products' => $products,
-    //     //     'categories' => $categories
-    //     // ];
-    //     // Header::render($data);
-    //     // Notification::render();
-    //     // NotificationHelper::unset();
-    //     // Index::render($data);
-    //     // Footer::render();
-    // }
-
-    public static function index()
+    public static function add()
     {
-        // $category = new Category();
-        // $categories = $category->getAllByStatus();
+        if (!isset($_COOKIE['user'])) {
+            NotificationHelper::error('login', 'Bạn phải đăng nhập để thêm vào giỏ hàng');
+            header('location: /');
+            exit();
 
-        // $product = new Product();
-        // $products = $product->getAllProductByStatus();
+        }
+        
+        $category = new Category();
+        $categories = $category->getAllByStatus();
 
-        // $list_buy = isset($_SESSION['cart']) && isset($_SESSION['cart']['buy']) ? $_SESSION['cart']['buy'] : [];
+        $product = new Product();
+        $products = $product->getAllProductByStatus();
 
-        // $data = [
-        //     'products' => $products,
-        //     'categories' => $categories,
-        //     'list_buy' => $list_buy,
-        // ];
+        $id = $_POST['id'];
+        $qty = $_POST['quantity'] ? $_POST['quantity'] : 1;
 
+
+        // Fetch the product from the model
+        $productModel = new Product();
+        $product = $productModel->getOneProduct($id);
+
+        // Add the product to the cart
+        $cartModel = new Cart;
+        $result = $cartModel->addProduct($product, $qty);
+
+        header('location: /cart');
+
+        // Debugging: Print the cart session
         // echo "<pre>";
-        // var_dump($data['list_buy']);
-
-        Header::render();
+        // var_dump($_SESSION['cart']);
+        $data = [
+            'products' => $products,
+            'categories' => $categories
+        ];
+        Header::render($data);
         Notification::render();
-        // NotificationHelper::unset();
-        CartView::render();
+        NotificationHelper::unset();
+        Index::render($data);
         Footer::render();
     }
 
-    // public static function delete($id)
-    // {
-    //     // Use the Cart model to delete the item
-    //     $cart = new Cart();
-    //     $cart->deleteItem($id);
+    public static function index()
+    {
+        $category = new Category();
+        $categories = $category->getAllByStatus();
 
-    //     // Redirect to the cart page or return a response
-    //     header('Location: /cart/show');
-    //     exit();
-    // }
+        $product = new Product();
+        $products = $product->getAllProductByStatus();
 
-    // public static function deleteAll()
-    // {
-    //     // Use the Cart model to delete all items
-    //     $cart = new Cart();
-    //     $cart->deleteAllItems();
+        // Lấy dữ liệu giỏ hàng từ cookie
+        $list_buy = isset($_COOKIE['cart_data']) ? json_decode($_COOKIE['cart_data'], true) : [];
 
-    //     // Redirect to the cart page or return a response
-    //     header('Location: /cart/show');
-    //     exit();
-    // }
+        $data = [
+            'products' => $products,
+            'categories' => $categories,
+            'list_buy' => $list_buy,
+        ];
 
-    // public static function update(){
-    //     if(isset($_POST['btn_update_cart'])){
-    //         var_dump($_POST);
-    //     }
-    // }
+        // echo "<pre>";
+        // var_dump($data['list_buy']); // Kiểm tra dữ liệu
 
-    // public static function checkout()
-    // {
-    //     $category = new Category();
-    //     $categories = $category->getAllByStatus();
+        Header::render($data);
+        Notification::render();
+        CartView::render($data);
+        Footer::render();
+    }
 
-    //     $product = new Product();
-    //     $products = $product->getAllProductByStatus();
 
-    //     $cart = isset($_SESSION['cart']) ? $_SESSION['cart'] : [];
+    public static function delete($id)
+    {
 
-    //     $data = [
-    //         'products' => $products,
-    //         'categories' => $categories,
-    //         'cart' => $cart,
-    //     ];
+        $cart = new Cart();
+        $cart->deleteItem($id);
 
-    //     // echo "<pre>";
-    //     // var_dump($data['cart']);
+        // Redirect to the cart page or return a response
+        header('Location: /cart');
+        exit();
+    }
 
-    //     Header::render($data);
-    //     Notification::render();
-    //     NotificationHelper::unset();
-    //     CheckOut::render($data);
-    //     Footer::render();
-    // }
-    
+    public static function deleteAll()
+    {
+        // Use the Cart model to delete all items
+        $cart = new Cart();
+        $cart->deleteAllItems();
+
+        // Redirect to the cart page or return a response
+        header('Location: /cart');
+        exit();
+    }
+
+
+    public static function clearCart()
+    {
+        // Use the Cart model to delete all items
+        $cart = new Cart();
+        $cart->clearCart();
+
+        // Redirect to the cart page or return a response
+        header('Location: /cart');
+        exit();
+    }
+
 }

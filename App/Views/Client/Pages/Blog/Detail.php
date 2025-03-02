@@ -24,52 +24,13 @@ class Detail extends BaseView
         </section>
 
         <div class="container mb-5" style="margin-top: 100px;">
-            <p class="text-dark" style="font-style: italic;">Đăng bởi <strong><?= $data['blog']['author'] ?></strong> vào ngày <?= $data['blog']['published_date'] ?></p>
+            <p class="text-dark" style="font-style: italic;">Đăng bởi <strong><?= $data['users']['username'] ?></strong> vào ngày <?= $data['blog_detail']['created_at'] ?></p>
             <article style="text-align: justify; margin-bottom: 100px;">
-                <h1 class="mb-3 text-capitalize" style="font-size: 3rem"><?= $data['blog']['title'] ?></h1>
-                <img src="<?= APP_URL ?>/public/assets/client/images/category3.jpg" alt="<?= $data['blog']['title'] ?>" class="img-fluid mb-4">
+                <h1 class="mb-3 text-capitalize" style="font-size: 3rem"><?= $data['blog_detail']['title'] ?></h1>
+                <img src="<?= APP_URL ?>/public/uploads/blogs/<?= $data['blog_detail']['image'] ?>" alt="<?= $data['blog_detail']['title'] ?>" class="img-fluid mb-4 w-50">
 
                 <div class="content mb-4">
-                    <p><?= $data['blog']['content'] ?></p>
-
-                    <h4 class="mt-4">Tại sao lập kế hoạch là quan trọng?</h4>
-                    <p>Lập kế hoạch là bước không thể thiếu trong quá trình thực hiện bất kỳ dự án hay công việc nào. Một kế hoạch tốt không chỉ giúp bạn đạt được mục tiêu một cách hiệu quả mà còn tiết kiệm thời gian, tài nguyên và công sức. Không có kế hoạch, bạn có thể sẽ phải đối mặt với sự hỗn loạn và khó khăn trong việc kiểm soát công việc. Những lợi ích của việc lập kế hoạch bao gồm:</p>
-                    <ul>
-                        <li><strong>Giúp bạn định hướng rõ ràng:</strong> Kế hoạch giúp bạn xác định mục tiêu và các bước cụ thể cần thực hiện để đạt được mục tiêu đó.</li>
-                        <li><strong>Tiết kiệm thời gian:</strong> Khi có một kế hoạch rõ ràng, bạn sẽ không phải mất thời gian loay hoay tìm kiếm hướng đi.</li>
-                        <li><strong>Giảm rủi ro:</strong> Kế hoạch giúp bạn dự đoán các vấn đề có thể xảy ra và chuẩn bị các phương án giải quyết trước.</li>
-                        <li><strong>Tăng cường khả năng phối hợp:</strong> Trong môi trường làm việc nhóm, kế hoạch rõ ràng giúp mọi người hiểu được vai trò và trách nhiệm của mình.</li>
-                    </ul>
-
-                    <h4 class="mt-4">Cách lập kế hoạch hiệu quả</h4>
-                    <p>Để lập một kế hoạch hiệu quả, bạn cần phải thực hiện theo các bước cơ bản nhưng cực kỳ quan trọng. Một số nguyên tắc giúp bạn xây dựng kế hoạch có tính khả thi và hiệu quả bao gồm:</p>
-
-                    <h5 class="mt-3">1. Xác định mục tiêu cụ thể và rõ ràng</h5>
-                    <p>Một kế hoạch không thể hoàn chỉnh nếu không có mục tiêu rõ ràng. Trước khi lập kế hoạch, bạn cần phải biết chính xác bạn muốn đạt được điều gì. Điều này sẽ giúp bạn tập trung vào những nhiệm vụ quan trọng và bỏ qua những việc không cần thiết.</p>
-
-                    <h5 class="mt-3">2. Phân chia mục tiêu thành các bước nhỏ</h5>
-                    <p>Khi mục tiêu đã rõ ràng, bạn cần chia nó thành các bước thực hiện cụ thể. Việc này giúp bạn có thể dễ dàng kiểm soát tiến độ công việc và điều chỉnh kế hoạch khi cần thiết.</p>
-
-                    <h5 class="mt-3">3. Lên lịch trình và ưu tiên công việc</h5>
-                    <p>Việc lập một lịch trình cho các công việc sẽ giúp bạn phân phối thời gian hợp lý. Hãy ưu tiên những công việc quan trọng và gấp rút. Điều này không chỉ giúp bạn làm việc hiệu quả mà còn giảm thiểu stress trong quá trình thực hiện.</p>
-
-                    <h5 class="mt-3">4. Theo dõi tiến độ và đánh giá kết quả</h5>
-                    <p>Không chỉ lập kế hoạch và thực hiện, bạn còn cần phải theo dõi tiến độ để đảm bảo rằng bạn đang đi đúng hướng. Đánh giá kết quả sau mỗi giai đoạn giúp bạn nhận diện những vấn đề cần khắc phục và đưa ra các điều chỉnh kịp thời.</p>
-
-                    <h4 class="mt-4">Những công cụ hỗ trợ lập kế hoạch</h4>
-                    <p>Ngày nay, với sự phát triển của công nghệ, có rất nhiều công cụ hỗ trợ bạn lập kế hoạch và quản lý công việc. Dưới đây là một số công cụ phổ biến:</p>
-
-                    <h5 class="mt-3">1. Trello</h5>
-                    <p>Trello là một công cụ quản lý dự án trực quan, giúp bạn dễ dàng phân chia công việc, theo dõi tiến độ và giao nhiệm vụ cho các thành viên trong nhóm. Trello rất linh hoạt và dễ sử dụng, phù hợp cho cả các dự án nhỏ và lớn.</p>
-
-                    <h5 class="mt-3">2. Asana</h5>
-                    <p>Asana là một công cụ mạnh mẽ giúp bạn theo dõi các nhiệm vụ và dự án trong thời gian thực. Asana cung cấp nhiều tính năng hữu ích, từ việc tạo nhiệm vụ, lên lịch, phân công công việc đến theo dõi tiến độ công việc của nhóm.</p>
-
-                    <h5 class="mt-3">3. Microsoft Project</h5>
-                    <p>Microsoft Project là một phần mềm lập kế hoạch và quản lý dự án chuyên nghiệp, cung cấp nhiều tính năng cho việc phân bổ tài nguyên, theo dõi tiến độ và lập báo cáo chi tiết. Đây là công cụ phù hợp cho các dự án lớn và phức tạp.</p>
-
-                    <h4 class="mt-4">Kết luận</h4>
-                    <p>Lập kế hoạch là một phần không thể thiếu trong bất kỳ công việc hay dự án nào. Một kế hoạch chi tiết và hợp lý sẽ giúp bạn đạt được mục tiêu một cách dễ dàng và hiệu quả hơn. Đồng thời, việc theo dõi và điều chỉnh kế hoạch trong suốt quá trình thực hiện là rất quan trọng để đảm bảo rằng bạn đang đi đúng hướng. Hãy nhớ rằng, thành công không chỉ đến từ việc làm việc chăm chỉ mà còn từ việc lập kế hoạch thông minh.</p>
+                    <p><?= $data['blog_detail']['content'] ?></p>
                 </div>
             </article>
 
@@ -181,7 +142,6 @@ class Detail extends BaseView
                 <div class="container">
                     <div class="section-title d-md-flex justify-content-between align-items-center mb-4">
                         <h3 class="d-flex align-items-center">Bài viết liên quan</h3>
-                        <!-- <a href="index.html" class="btn">Xem tất cả</a> -->
                     </div>
                     <div class="row">
                         <div class="col-md-3 posts mb-4">

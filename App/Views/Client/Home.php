@@ -144,7 +144,7 @@ class Home extends BaseView
         <section id="best-selling-items" class="position-relative padding-large ">
             <div class="container">
                 <div class="section-title d-md-flex justify-content-between align-items-center mb-4">
-                    <h3 class="d-flex align-items-center">Sản phẩm bán chạy</h3>
+                    <h3 class="d-flex align-items-center">Sản phẩm nổi bật</h3>
                     <a href="/products" class="btn">Xem tất cả</a>
                 </div>
                 <div class="position-absolute top-50 end-0 pe-0 pe-xxl-5 me-0 me-xxl-5 swiper-next product-slider-button-next">
@@ -159,289 +159,85 @@ class Home extends BaseView
                 </div>
                 <div class="swiper product-swiper">
                     <div class="swiper-wrapper">
-                        <div class="swiper-slide">
-                            <div class="card position-relative p-4 border rounded-3">
-                                <div class="position-absolute">
-                                    <p class="bg-primary py-1 px-3 fs-6 text-white rounded-2">-10%</p>
-                                </div>
-                                <a href="/products/1">
-                                    <img src="<?= APP_URL ?>/public/assets/client/images/product-item1.png" class="img-fluid shadow-sm" alt="product item">
-                                </a>
-                                <h6 class="mt-4 mb-0 fw-bold"><a href="/products/1">House of Sky Breath</a></h6>
-                                <div class="review-content d-flex mb-2">
-                                    <p class="my-2 me-2 fs-6 text-black-50">Lauren Asher</p>
+                        <?php if (isset($data['feature_products']) && count($data['feature_products']) > 0): ?>
+                            <?php foreach ($data['feature_products'] as $item): ?>
+                                <div class="swiper-slide">
+                                    <div class="card position-relative p-4 border rounded-3">
+                                        <?php if ($item['discount_price'] > 0): ?>
+                                            <div class="position-absolute">
+                                                <p class="bg-primary py-1 px-3 fs-6 text-white rounded-2">
+                                                    <?= number_format(($item['discount_price'] / $item['price']) * 100) ?>%
+                                                </p>
+                                            </div>
+                                        <?php endif; ?>
 
-                                    <div class="rating text-warning d-flex align-items-center">
-                                        <svg class="star star-fill">
-                                            <use xlink:href="#star-fill"></use>
-                                        </svg>
-                                        <svg class="star star-fill">
-                                            <use xlink:href="#star-fill"></use>
-                                        </svg>
-                                        <svg class="star star-fill">
-                                            <use xlink:href="#star-fill"></use>
-                                        </svg>
-                                        <svg class="star star-fill">
-                                            <use xlink:href="#star-fill"></use>
-                                        </svg>
-                                        <svg class="star star-fill">
-                                            <use xlink:href="#star-fill"></use>
-                                        </svg>
-                                    </div>
+                                        <a href="/products/<?= $item['id'] ?>">
+                                            <img src="<?= APP_URL ?>public/uploads/products/<?= $item['image'] ?>" class="img-fluid shadow-sm" alt="product item" style="height:180px; width:100%">
+                                        </a>
+                                        <h6 class="mt-4 mb-0 fw-bold">
+                                            <a href="/products/<?= $item['id'] ?>">
+                                                <?= mb_strimwidth($item['name'], 0, 36, "...") ?>
+                                            </a>
+                                        </h6>
 
-                                </div>
-                                <p>Giá gốc: <strike><?= number_format(200000) ?> đ</strike></p>
-                                <p>Giá giảm: <strong class="price text-primary fw-bold mb-2 fs-5"><?= number_format(99000) ?> đ</strong></p>
-                                <div class="card-concern position-absolute start-0 end-0 d-flex gap-2">
-                                    <a href="/cart" class="btn btn-dark">
-                                        <svg class="cart">
-                                            <use xlink:href="#cart"></use>
-                                        </svg>
-                                    </a>
-                                    <a href="/wishlist" class="btn btn-dark">
-                                        <span>
-                                            <svg class="wishlist">
-                                                <use xlink:href="#heart"></use>
-                                            </svg>
-                                        </span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="card position-relative p-4 border rounded-3">
-                                <a href="/products/1">
-                                    <img src="<?= APP_URL ?>/public/assets/client/images/product-item2.png" class="img-fluid shadow-sm" alt="product item">
-                                </a>
-                                <h6 class="mt-4 mb-0 fw-bold"><a href="/products/1">Heartland Stars</a></h6>
-                                <div class="review-content d-flex">
-                                    <p class="my-2 me-2 fs-6 text-black-50">Lauren Asher</p>
+                                        <div class="review-content d-flex mb-2">
+                                            <!-- <p class="my-2 me-2 fs-6 text-black-50">Lauren Asher</p> -->
 
-                                    <div class="rating text-warning d-flex align-items-center">
-                                        <svg class="star star-fill">
-                                            <use xlink:href="#star-fill"></use>
-                                        </svg>
-                                        <svg class="star star-fill">
-                                            <use xlink:href="#star-fill"></use>
-                                        </svg>
-                                        <svg class="star star-fill">
-                                            <use xlink:href="#star-fill"></use>
-                                        </svg>
-                                        <svg class="star star-fill">
-                                            <use xlink:href="#star-fill"></use>
-                                        </svg>
-                                        <svg class="star star-fill">
-                                            <use xlink:href="#star-fill"></use>
-                                        </svg>
+                                            <div class="rating text-warning d-flex align-items-center">
+                                                <svg class="star star-fill">
+                                                    <use xlink:href="#star-fill"></use>
+                                                </svg>
+                                                <svg class="star star-fill">
+                                                    <use xlink:href="#star-fill"></use>
+                                                </svg>
+                                                <svg class="star star-fill">
+                                                    <use xlink:href="#star-fill"></use>
+                                                </svg>
+                                                <svg class="star star-fill">
+                                                    <use xlink:href="#star-fill"></use>
+                                                </svg>
+                                                <svg class="star star-fill">
+                                                    <use xlink:href="#star-fill"></use>
+                                                </svg>
+                                            </div>
+
+                                        </div>
+                                        <?php if ($item['discount_price'] > 0): ?>
+                                            <p>Giá gốc: <strike><?= number_format($item['price']) ?> đ</strike></p>
+                                            <p>Giá giảm: <strong class="price text-primary fw-bold mb-2 fs-5"><?= number_format($item['price'] - $item['discount_price']) ?> đ</strong></p>
+
+                                        <?php else: ?>
+                                            <p>Giá: <strong class="price text-primary fw-bold mb-2 fs-5"><?= number_format($item['price']) ?> đ</strong></p>
+
+                                        <?php endif; ?>
+
+                                        <div class="card-concern position-absolute start-0 end-0 d-flex gap-2">
+                                        <form action="/cart/add" method="post">
+                                                <input type="hidden" name="method" id="" value="POST">
+                                                <input type="hidden" name="id" id="" value="<?= $item['id'] ?>" required>
+                                                <input type="hidden" id="quantity" name="quantity" value="1" min="1">
+                                                <button type="submit" href="#" class="btn btn-dark" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                    data-bs-title="Tooltip on top">
+                                                    <svg class="cart">
+                                                        <use xlink:href="#cart"></use>
+                                                    </svg>
+                                                </button>
+                                            </form>
+                                            <a href="/wishlist" class="btn btn-dark">
+                                                <span>
+                                                    <svg class="wishlist">
+                                                        <use xlink:href="#heart"></use>
+                                                    </svg>
+                                                </span>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <p>Giá gốc: <strike><?= number_format(200000) ?> đ</strike></p>
-                                <p>Giá giảm: <strong class="price text-primary fw-bold mb-2 fs-5"><?= number_format(99000) ?> đ</strong></p>
-                                <div class="card-concern position-absolute start-0 end-0 d-flex gap-2">
-                                    <a href="/cart" class="btn btn-dark">
-                                        <svg class="cart">
-                                            <use xlink:href="#cart"></use>
-                                        </svg>
-                                    </a>
-                                    <a href="/wishlist" class="btn btn-dark">
-                                        <span>
-                                            <svg class="wishlist">
-                                                <use xlink:href="#heart"></use>
-                                            </svg>
-                                        </span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="card position-relative p-4 border rounded-3">
-                                <a href="/products/1">
-                                    <img src="<?= APP_URL ?>/public/assets/client/images/product-item3.png" class="img-fluid shadow-sm" alt="product item">
-                                </a>
-                                <h6 class="mt-4 mb-0 fw-bold"><a href="/products/1">Heavenly Bodies</a></h6>
-                                <div class="review-content d-flex">
-                                    <p class="my-2 me-2 fs-6 text-black-50">Lauren Asher</p>
-
-                                    <div class="rating text-warning d-flex align-items-center">
-                                        <svg class="star star-fill">
-                                            <use xlink:href="#star-fill"></use>
-                                        </svg>
-                                        <svg class="star star-fill">
-                                            <use xlink:href="#star-fill"></use>
-                                        </svg>
-                                        <svg class="star star-fill">
-                                            <use xlink:href="#star-fill"></use>
-                                        </svg>
-                                        <svg class="star star-fill">
-                                            <use xlink:href="#star-fill"></use>
-                                        </svg>
-                                        <svg class="star star-fill">
-                                            <use xlink:href="#star-fill"></use>
-                                        </svg>
-                                    </div>
-                                </div>
-
-                                <p>Giá gốc: <strike><?= number_format(200000) ?> đ</strike></p>
-                                <p>Giá giảm: <strong class="price text-primary fw-bold mb-2 fs-5"><?= number_format(99000) ?> đ</strong></p>
-                                <div class="card-concern position-absolute start-0 end-0 d-flex gap-2">
-                                    <a href="/cart" class="btn btn-dark">
-                                        <svg class="cart">
-                                            <use xlink:href="#cart"></use>
-                                        </svg>
-                                    </a>
-                                    <a href="/wishlist" class="btn btn-dark">
-                                        <span>
-                                            <svg class="wishlist">
-                                                <use xlink:href="#heart"></use>
-                                            </svg>
-                                        </span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="card position-relative p-4 border rounded-3">
-                                <div class="position-absolute">
-                                    <p class="bg-primary py-1 px-3 fs-6 text-white rounded-2">-10%</p>
-                                </div>
-                                <a href="/products/1">
-                                    <img src="<?= APP_URL ?>/public/assets/client/images/product-item4.png" class="img-fluid shadow-sm" alt="product item">
-                                </a>
-                                <h6 class="mt-4 mb-0 fw-bold"><a href="/products/1">His Saving Grace</a></h6>
-                                <div class="review-content d-flex">
-                                    <p class="my-2 me-2 fs-6 text-black-50">Lauren Asher</p>
-
-                                    <div class="rating text-warning d-flex align-items-center">
-                                        <svg class="star star-fill">
-                                            <use xlink:href="#star-fill"></use>
-                                        </svg>
-                                        <svg class="star star-fill">
-                                            <use xlink:href="#star-fill"></use>
-                                        </svg>
-                                        <svg class="star star-fill">
-                                            <use xlink:href="#star-fill"></use>
-                                        </svg>
-                                        <svg class="star star-fill">
-                                            <use xlink:href="#star-fill"></use>
-                                        </svg>
-                                        <svg class="star star-fill">
-                                            <use xlink:href="#star-fill"></use>
-                                        </svg>
-                                    </div>
-                                </div>
-
-                                <p>Giá gốc: <strike><?= number_format(200000) ?> đ</strike></p>
-                                <p>Giá giảm: <strong class="price text-primary fw-bold mb-2 fs-5"><?= number_format(99000) ?> đ</strong></p>
-                                <div class="card-concern position-absolute start-0 end-0 d-flex gap-2">
-                                    <a href="/cart" class="btn btn-dark">
-                                        <svg class="cart">
-                                            <use xlink:href="#cart"></use>
-                                        </svg>
-                                    </a>
-                                    <a href="/wishlist" class="btn btn-dark">
-                                        <span>
-                                            <svg class="wishlist">
-                                                <use xlink:href="#heart"></use>
-                                            </svg>
-                                        </span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="card position-relative p-4 border rounded-3">
-                                <a href="/products/1">
-                                    <img src="<?= APP_URL ?>/public/assets/client/images/product-item5.png" class="img-fluid shadow-sm" alt="product item">
-                                </a>
-                                <h6 class="mt-4 mb-0 fw-bold"><a href="/products/1">My Dearest Darkest</a></h6>
-                                <div class="review-content d-flex">
-                                    <p class="my-2 me-2 fs-6 text-black-50">Lauren Asher</p>
-
-                                    <div class="rating text-warning d-flex align-items-center d-flex align-items-center">
-                                        <svg class="star star-fill">
-                                            <use xlink:href="#star-fill"></use>
-                                        </svg>
-                                        <svg class="star star-fill">
-                                            <use xlink:href="#star-fill"></use>
-                                        </svg>
-                                        <svg class="star star-fill">
-                                            <use xlink:href="#star-fill"></use>
-                                        </svg>
-                                        <svg class="star star-fill">
-                                            <use xlink:href="#star-fill"></use>
-                                        </svg>
-                                        <svg class="star star-fill">
-                                            <use xlink:href="#star-fill"></use>
-                                        </svg>
-                                    </div>
-                                </div>
-
-                                <p>Giá gốc: <strike><?= number_format(200000) ?> đ</strike></p>
-                                <p>Giá giảm: <strong class="price text-primary fw-bold mb-2 fs-5"><?= number_format(99000) ?> đ</strong></p>
-                                <div class="card-concern position-absolute start-0 end-0 d-flex gap-2">
-                                    <a href="/cart" class="btn btn-dark">
-                                        <svg class="cart">
-                                            <use xlink:href="#cart"></use>
-                                        </svg>
-                                    </a>
-                                    <a href="/wishlist" class="btn btn-dark">
-                                        <span>
-                                            <svg class="wishlist">
-                                                <use xlink:href="#heart"></use>
-                                            </svg>
-                                        </span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="card position-relative p-4 border rounded-3">
-                                <a href="/products/1">
-                                    <img src="<?= APP_URL ?>/public/assets/client/images/product-item6.png" class="img-fluid shadow-sm" alt="product item">
-                                </a>
-                                <h6 class="mt-4 mb-0 fw-bold"><a href="/products/1">The Story of Success</a></h6>
-                                <div class="review-content d-flex">
-                                    <p class="my-2 me-2 fs-6 text-black-50">Lauren Asher</p>
-
-                                    <div class="rating text-warning d-flex align-items-center">
-                                        <svg class="star star-fill">
-                                            <use xlink:href="#star-fill"></use>
-                                        </svg>
-                                        <svg class="star star-fill">
-                                            <use xlink:href="#star-fill"></use>
-                                        </svg>
-                                        <svg class="star star-fill">
-                                            <use xlink:href="#star-fill"></use>
-                                        </svg>
-                                        <svg class="star star-fill">
-                                            <use xlink:href="#star-fill"></use>
-                                        </svg>
-                                        <svg class="star star-fill">
-                                            <use xlink:href="#star-fill"></use>
-                                        </svg>
-                                    </div>
-                                </div>
-
-                                <p>Giá gốc: <strike><?= number_format(200000) ?> đ</strike></p>
-                                <p>Giá giảm: <strong class="price text-primary fw-bold mb-2 fs-5"><?= number_format(99000) ?> đ</strong></p>
-                                <div class="card-concern position-absolute start-0 end-0 d-flex gap-2">
-                                    <a href="/cart" class="btn btn-dark">
-                                        <svg class="cart">
-                                            <use xlink:href="#cart"></use>
-                                        </svg>
-                                    </a>
-                                    <a href="/wishlist" class="btn btn-dark">
-                                        <span>
-                                            <svg class="wishlist">
-                                                <use xlink:href="#heart"></use>
-                                            </svg>
-                                        </span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <h3 class="text-center text-danger">Không có sản phẩm nổi bật</h3>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -1057,34 +853,23 @@ class Home extends BaseView
                     <a href="/blogs" class="btn">Xem tất cả</a>
                 </div>
                 <div class="row">
-                    <div class="col-md-3 posts mb-4">
-                        <img src="<?= APP_URL ?>/public/assets/client/images/post-item1.jpg" alt="post image" class="img-fluid rounded-3">
-                        <a href="blog.html" class="fs-6 text-primary">Sách</a>
-                        <h4 class="card-title mb-2 text-capitalize text-dark"><a href="/blogs/1">10 Cuốn Sách Phải Đọc Trong Năm: Lựa Chọn Hàng Đầu Của Chúng Tôi!</a></h4>
-                        <p class="mb-2">Khám phá thế giới công nghệ tiên tiến với bài viết blog mới nhất của chúng tôi, nơi chúng tôi giới thiệu năm thiết bị công nghệ thiết yếu... <span><a class="text-decoration-underline text-black-50" href="/blogs/1">Đọc thêm</a></span>
-                        </p>
-                    </div>
-                    <div class="col-md-3 posts mb-4">
-                        <img src="<?= APP_URL ?>/public/assets/client/images/post-item2.jpg" alt="post image" class="img-fluid rounded-3">
-                        <a href="blog.html" class="fs-6 text-primary">Sách</a>
-                        <h4 class="card-title mb-2 text-capitalize text-dark"><a href="/blogs/1">Vùng Đất Hấp Dẫn Của Khoa Học Viễn Tưởng</a></h4>
-                        <p class="mb-2">Khám phá sự giao thoa giữa công nghệ và phát triển bền vững trong bài viết blog mới nhất của chúng tôi. Tìm hiểu về những đổi mới... <span><a class="text-decoration-underline text-black-50" href="/blogs/1">Đọc thêm</a></span> </p>
-                    </div>
-                    <div class="col-md-3 posts mb-4">
-                        <img src="<?= APP_URL ?>/public/assets/client/images/post-item3.jpg" alt="post image" class="img-fluid rounded-3">
-                        <a href="blog.html" class="fs-6 text-primary">Sách</a>
-                        <h4 class="card-title mb-2 text-capitalize text-dark"><a href="/blogs/1">Tìm kiếm tình yêu qua từng trang sách</a></h4>
-                        <p class="mb-2">Đi trước xu thế với cái nhìn sâu sắc của chúng tôi về sự phát triển nhanh chóng của công nghệ ... <span><a class="text-decoration-underline text-black-50" href="/blogs/1">Đọc thêm</a></span>
-                        </p>
-                    </div>
-                    <div class="col-md-3 posts mb-4">
-                        <img src="<?= APP_URL ?>/public/assets/client/images/post-item4.jpg" alt="post image" class="img-fluid rounded-3">
-                        <a href="blog.html" class="fs-6 text-primary">Sách</a>
-                        <h4 class="card-title mb-2 text-capitalize text-dark"><a href="/blogs/1">Đọc sách cho sức khỏe tinh thần: Làm thế nào sách có thể chữa lành và truyền cảm hứng</a></h4>
-                        <p class="mb-2">Trong môi trường làm việc từ xa ngày nay, năng suất là yếu tố quan trọng. Khám phá các ứng dụng và công cụ hàng đầu giúp bạn duy trì hiệu quả công việc... <span><a class="text-decoration-underline text-black-50" href="/blogs/1">Đọc thêm</a></span>
-                        </p>
-                    </div>
+                    <?php foreach ($data['latestBlogs'] as $blog): ?>
+                        <div class="col-md-3 posts mb-4">
+                            <img src="<?= APP_URL ?>public/uploads/blogs/<?= $blog['image'] ?>" alt="post image" class="img-fluid rounded-3" style="height: 180px; display:block; object-fit: cover;">
+                            <a href="blog.html" class="fs-6 text-primary"><?= $blog['category_name'] ?></a>
+                            <h4 class="card-title mb-2 text-capitalize text-dark">
+                                <a href="/blogs/<?= $blog['id'] ?>">
+                                    <?= mb_strimwidth($blog['title'], 0, 50, "...") ?>
+                                </a>
+                            </h4>
+                            <p class="mb-2">
+                                <?= mb_strimwidth($blog['content'], 0, 100, "...") ?>
+                                <span><a class="text-decoration-underline text-black-50" href="/blogs/<?= $blog['id'] ?>">Đọc thêm</a></span>
+                            </p>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
+
             </div>
         </section>
 

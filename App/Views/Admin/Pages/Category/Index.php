@@ -55,7 +55,9 @@ class Index extends BaseView
                                                         <tr>
                                                             <th>ID</th>
                                                             <th>Tên</th>
-                                                            <th>Trạng thái</th>
+                                                            <th>Trạng Thái</th>
+                                                            <th>Mô Tả</th>
+                                                            <th>Hình Ảnh</th>
                                                             <th></th>
                                                         </tr>
                                                     </thead>
@@ -65,11 +67,19 @@ class Index extends BaseView
                                                         ?>
                                                             <tr>
                                                                 <td><?= $item['id'] ?></td>
-                                                                <td><?= $item['name'] ?></td>
-                                                                <td><?= ($item['status'] == 1) ? 'Hiển thị' : 'Ẩn' ?></td>
+                                                                <td><?= $item['category_name'] ?></td>
+                                                                <td><?= ($item['status'] === 'active') ? 'Hoạt động' : 'Ngưng hoạt động' ?></td>
+                                                                <td><?= $item['description'] ?></td>
+                                                                <td>
+                                                                    <?php if ($item['image']) : ?>
+                                                                        <img src="<?= APP_URL ?>/public/uploads/products/<?= $item['image'] ?>" alt="" width="50px" height="50px">
+                                                                    <?php else : ?>
+                                                                        Không có ảnh
+                                                                    <?php endif; ?>
+                                                                </td>
                                                                 <td>
                                                                     <a href="/admin/categories/<?= $item['id'] ?>" class="btn btn-primary ">Sửa</a>
-                                                                    <form action="/admin/categories/<?= $item['id'] ?>" method="post" style="display: inline-block;" onsubmit="return confirm('Chắc chưa?')">
+                                                                    <form action="/admin/categories/<?= $item['id'] ?>" method="post" style="display: inline-block;" onsubmit="return handleDelete(event)">
                                                                         <input type="hidden" name="method" value="DELETE" id="">
                                                                         <button type="submit" class="btn btn-danger text-white">Xoá</button>
                                                                     </form>
@@ -115,6 +125,26 @@ class Index extends BaseView
                 </div>
             </div>
 
+            <script>
+                // Hàm xử lý xác nhận xóa bằng SweetAlert2
+                function handleDelete(event) {
+                    event.preventDefault(); // Ngừng việc gửi form mặc định
+
+                    Swal.fire({
+                        title: 'Bạn chắc chắn muốn xóa?',
+                        text: 'Bạn không thể khôi phục sau khi xóa!',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Đồng ý',
+                        cancelButtonText: 'Hủy'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Nếu xác nhận, gửi form
+                            event.target.submit();
+                        }
+                    });
+                }
+            </script>
 
     <?php
     }

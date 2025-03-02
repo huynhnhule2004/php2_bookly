@@ -13,6 +13,9 @@ abstract class BaseModel implements CrudInterface
     protected $table;
     protected $id;
 
+    protected $errors = [];
+
+
     const STATUS_ENABLE = 1;
     const STATUS_DISABLE = 0;
 
@@ -125,7 +128,7 @@ abstract class BaseModel implements CrudInterface
 
     public function getAllByStatus()
     {
-        $sql = "SELECT * FROM $this->table WHERE status=" . self::STATUS_ENABLE;
+        $sql = "SELECT * FROM $this->table WHERE status= 'active'";
         $result = $this->_conn->MySQLi()->query($sql);
         return $result->fetch_all(MYSQLI_ASSOC);
     }
@@ -161,4 +164,6 @@ abstract class BaseModel implements CrudInterface
             return $result;
         }
     }
+
+   
 }

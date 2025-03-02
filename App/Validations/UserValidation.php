@@ -60,6 +60,11 @@ class UserValidation
             $is_valid = false;
         }
 
+        // Số điện thoại
+        if (!isset($_POST['phone_number']) || $_POST['phone_number'] === '' && strlen($_POST['phone_number']) > 10) {
+            NotificationHelper::error('password', 'Vui lòng nhập số điện thoại hợp lệ');
+            $is_valid = false;
+        }
         // Trạng thái
         if (!isset($_POST['status']) || $_POST['status'] === '') {
             NotificationHelper::error('status', 'Không để trống trạng thái');

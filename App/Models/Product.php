@@ -55,7 +55,7 @@ class Product extends BaseModel
         $result = [];
         try {
             // $sql = "SELECT * FROM $this->table";
-            $sql = "SELECT products.*, categories.name AS category_name 
+            $sql = "SELECT products.*, categories.category_name
             FROM products 
             INNER JOIN categories 
             on products.category_id=categories.id;";
@@ -71,10 +71,10 @@ class Product extends BaseModel
     {
         $result = [];
         try {
-            $sql = "SELECT products.*, categories.name AS category_name FROM products 
+            $sql = "SELECT products.*, categories.category_name FROM products 
             INNER JOIN categories on products.category_id = categories.id 
-            WHERE products.status=" . self::STATUS_ENABLE . " 
-            AND categories.status = " . self::STATUS_ENABLE . " AND products.category_id=?";
+            WHERE products.status= 'available' 
+            AND categories.status = 'active' AND products.category_id=?";
             $conn = $this->_conn->MySQLi();
             $stmt = $conn->prepare($sql);
 
@@ -91,10 +91,10 @@ class Product extends BaseModel
     {
         $result = [];
         try {
-            $sql = "SELECT products.*, categories.name AS category_name FROM products 
+            $sql = "SELECT products.*, categories.category_name FROM products 
             INNER JOIN categories on products.category_id = categories.id 
-            WHERE products.status=" . self::STATUS_ENABLE . " 
-            AND categories.status = " . self::STATUS_ENABLE . " AND products.id=?";
+            WHERE products.status='available'
+            AND categories.status = 'active' AND products.id=?";
             $conn = $this->_conn->MySQLi();
             $stmt = $conn->prepare($sql);
 
@@ -116,7 +116,7 @@ class Product extends BaseModel
     {
         $result = [];
         try {
-            $sql = "SELECT COUNT(*) AS count, categories.name FROM products INNER JOIN categories ON products.category_id = categories.id GROUP BY products.category_id;";
+            $sql = "SELECT COUNT(*) AS count, categories.category_name FROM products INNER JOIN categories ON products.category_id = categories.id GROUP BY products.category_id;";
             $result = $this->_conn->MySQLi()->query($sql);
             return $result->fetch_all(MYSQLI_ASSOC);
         } catch (\Throwable $th) {
@@ -176,4 +176,38 @@ class Product extends BaseModel
             return $result;
         }
     }
+
+    public function decreaseStock($productId, $quantity)
+    {
+        try {
+            $conn = $this->_conn->MySQLi();
+    
+            // Lấy tồn kho hiện tại
+            $stmt = $conn->prepare("SELECT stock FROM products WHERE id = ?");
+            $stmt->bind_param("i", $productId);
+            $stmt->execute();
+            $stock = $stmt->get_result()->fetch_assoc()['stock'] ?? 0;
+            $stmt->close();
+    
+            if ($stock < $quantity) return false; // Không đủ hàng
+    
+            // Cập nhật tồn kho
+            $stmt = $conn->prepare("UPDATE products SET stock = stock - ? WHERE id = ?");
+            $stmt->bind_param("ii", $quantity, $productId);
+            $stmt->execute();
+            return $stmt->affected_rows > 0;
+        } catch (\Throwable $th) {
+            error_log('Lỗi giảm tồn kho: ' . $th->getMessage());
+            return false;
+        }
+    }
+    
+    
+    
+
+
+
+
+
+
 }

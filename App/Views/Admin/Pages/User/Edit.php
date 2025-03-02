@@ -62,15 +62,11 @@ class Edit extends BaseView
                                             </div>
                                             <div class="form-group">
                                                 <label for="email">Email*</label>
-                                                <input type="text" class="form-control" id="email" placeholder="Nhập tên người dùng..." name="email" value="<?= $data['email'] ?>" required>
+                                                <input type="text" class="form-control" id="email" placeholder="Nhập tên người dùng..." name="email" value="<?= $data['email'] ?>">
                                             </div>
                                             <div class="form-group">
-                                                <label for="last_name">Họ*</label>
-                                                <input type="text" class="form-control" id="last_name" placeholder="Nhập họ người dùng..." name="last_name" value="<?= $data['last_name'] ?>" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="first_name">Tên*</label>
-                                                <input type="text" class="form-control" id="first_name" placeholder="Nhập tên người dùng..." name="first_name" value="<?= $data['first_name'] ?>" required>
+                                                <label for="name">Họ và tên*</label>
+                                                <input type="text" class="form-control" id="name" placeholder="Nhập họ người dùng..." name="name" value="<?= $data['name'] ?>" required>
                                             </div>
                                             <div class="form-group">
                                                 <label for="phone_number">Số điện thoại*</label>
@@ -104,8 +100,8 @@ class Edit extends BaseView
                                                 <label for="status">Trạng thái*</label>
                                                 <select class="select2 form-select shadow-none" style="width: 100%; height:36px;" id="status" name="status" required>
                                                     <option value="" disabled>Vui lòng chọn...</option>
-                                                    <option value="1" <?= ($data['status'] === 'active' ? 'selected' : '') ?>>Hoạt động</option>
-                                                    <option value="0" <?= ($data['status'] === 'inactive' ? 'selected' : '') ?>>Khóa</option>
+                                                    <option value="active" <?= ($data['status'] === 'active' ? 'selected' : '') ?>>Hoạt động</option>
+                                                    <option value="inactive" <?= ($data['status'] === 'inactive' ? 'selected' : '') ?>>Khóa</option>
                                                 </select>
                                             </div>
 

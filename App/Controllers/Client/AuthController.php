@@ -22,34 +22,6 @@ use App\Models\Product;
 class AuthController
 {
 
-    // Hiển thị giao diện form register
-    // public static function register()
-    // {
-    //     // $category = new Category();
-    //     // $categories = $category->getAllByStatus();
-
-    //     // $product = new Product();
-    //     // $products = $product->getAllProductByStatus();
-
-    //     // $data = [
-    //     //     'products' => $products,
-    //     //     'categories' => $categories
-    //     // ];
-    //     // Hiển thị Header
-    //     Header::render();
-
-    //     // Hiển thị thông báo
-    //     Notification::render();
-
-    //     // Hủy session thông báo
-    //     NotificationHelper::unset();
-
-    //     // Hiển thị form đăng ký
-    //     Register::render();
-
-    //     // Hiển thị footer
-    //     Footer::render();
-    // }
 
     // Thực hiện đăng ký
     public static function registerAction()
@@ -92,26 +64,6 @@ class AuthController
             header('Location: /');
         }
     }
-
-    // public static function login()
-    // {
-    //     // $category = new Category();
-    //     // $categories = $category->getAllByStatus();
-
-    //     // $product = new Product();
-    //     // $products = $product->getAllProductByStatus();
-
-    //     // $data = [
-    //     //     'products' => $products,
-    //     //     'categories' => $categories
-    //     // ];
-
-    //     Header::render();
-    //     Notification::render();
-    //     NotificationHelper::unset();
-    //     Login::render();
-    //     Footer::render();
-    // }
 
     public static function loginAction()
     {

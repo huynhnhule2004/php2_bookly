@@ -43,7 +43,7 @@ class Detail extends BaseView
                                                 </tr>
                                                 <tr>
                                                     <th>Tên khách hàng:</th>
-                                                    <td><?= $order['last_name'] . ' ' . $order['first_name'] ?></td>
+                                                    <td><?= $order['name'] ?></td>
                                                 </tr>
                                                 <tr>
                                                     <th>Tổng giá:</th>
@@ -141,9 +141,9 @@ class Detail extends BaseView
                                                         <tr>
                                                             <td><?= $index++ ?></td>
                                                             <td>
-                                                                <img src="<?= APP_URL ?>/public/uploads/products/<?= htmlspecialchars($item['image']) ?>" alt="<?= htmlspecialchars($item['product_name']) ?>" width="100px">
+                                                                <img src="<?= APP_URL ?>/public/uploads/products/<?= htmlspecialchars($item['image']) ?>" alt="<?= htmlspecialchars($item['name']) ?>" width="100px">
                                                             </td>
-                                                            <td><?= $item['product_name'] ?></td>
+                                                            <td><?= $item['name'] ?></td>
                                                             <td><?= $item['quantity'] ?></td>
                                                             <td><?= number_format($item['price']) ?> VND</td>
                                                             <td><?= number_format($item['quantity'] * $item['price']) ?> VND</td>

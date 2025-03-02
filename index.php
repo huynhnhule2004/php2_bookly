@@ -25,10 +25,12 @@ AuthHelper::middleware();
 Route::get('/', 'App\Controllers\Client\HomeController@index');
 Route::get('/products', 'App\Controllers\Client\ProductController@index');
 Route::get('/products/{id}', 'App\Controllers\Client\ProductController@detail');
+Route::get('/products/categories/{id}', 'App\Controllers\Client\ProductController@getProductByCategory');
 
 Route::get('/contact', 'App\Controllers\Client\ContactController@index');
+Route::post('/contact', 'App\Controllers\Client\ContactController@PostContact');
+
 Route::get('/checkout', 'App\Controllers\Client\CheckoutController@index');
-Route::get('/cart', 'App\Controllers\Client\CartController@index');
 Route::get('/wishlist', 'App\Controllers\Client\WishlistController@index');
 
 
@@ -39,6 +41,13 @@ Route::get('/about', 'App\Controllers\Client\AboutController@index');
 
 Route::post('/register', 'App\Controllers\Client\AuthController@registerAction');
 Route::post('/login', 'App\Controllers\Client\AuthController@loginAction');
+Route::post('/forgot-password/send', 'App\Controllers\Client\ForgotPasswordController@sendResetLink');
+Route::get('/reset-password', 'App\Controllers\Client\ForgotPasswordController@showResetPasswordForm');
+Route::put('/reset-password', 'App\Controllers\Client\ForgotPasswordController@resetPassword');
+
+
+
+
 
 Route::get('/logout', 'App\Controllers\Client\AuthController@logout');
 
@@ -50,8 +59,28 @@ Route::put('/change-password', 'App\Controllers\Client\AuthController@changePass
 
 Route::post('/forgot-password', 'App\Controllers\Client\AuthController@forgotPasswordAction');
 
-Route::get('/reset-password', 'App\Controllers\Client\AuthController@resetPassword');
-Route::put('/reset-password', 'App\Controllers\Client\AuthController@resetPasswordAction');
+// Route::get('/reset-password', 'App\Controllers\Client\AuthController@resetPassword');
+// Route::put('/reset-password', 'App\Controllers\Client\AuthController@resetPasswordAction');
+
+Route::post('/comments', 'App\Controllers\Client\CommentController@store');
+Route::put('/comments/{id}', 'App\Controllers\Client\CommentController@update');
+Route::delete('/comments/{id}', 'App\Controllers\Client\CommentController@delete');
+
+Route::get('/cart', 'App\Controllers\Client\CartController@index');
+Route::post('/cart/add', 'App\Controllers\Client\CartController@add');
+Route::post('/cart/update', 'App\Controllers\Client\CartController@updateCart');
+Route::delete('/cart/{id}', 'App\Controllers\Client\CartController@delete');
+Route::get('/cart/clearCart', 'App\Controllers\Client\CartController@clearCart');
+Route::get('/cart/checkout', 'App\Controllers\Client\CartController@checkout');
+
+Route::post('/orders', 'App\Controllers\Client\OrderController@index');
+Route::get('/orders/{id}', 'App\Controllers\Client\OrderController@detail');
+Route::get('/orders/history', 'App\Controllers\Client\OrderController@history');
+Route::get('/orders/history/search', 'App\Controllers\Client\OrderController@search');
+
+Route::get('/orders/success', 'App\Controllers\Client\OrderController@success');
+
+
 
 // *** Admin
 
@@ -148,26 +177,6 @@ Route::put('/admin/blog_categories/{id}', 'App\Controllers\Admin\BlogCategoryCon
 
 // DELETE /blog_categories/{id} (delete loại sản phẩm với id cụ thể)
 Route::delete('/admin/blog_categories/{id}', 'App\Controllers\Admin\BlogCategoryController@delete');
-
-
-//  *** Blog
-// GET /blogs (lấy danh sách sản phẩm)
-Route::get('/admin/blogs', 'App\Controllers\Admin\BlogController@index');
-
-// GET /blogs/create (hiển thị form thêm sản phẩm)
-Route::get('/admin/blogs/create', 'App\Controllers\Admin\BlogController@create');
-
-// POST /blogs (tạo mới một sản phẩm)
-Route::post('/admin/blogs', 'App\Controllers\Admin\BlogController@store');
-
-// GET /blogs/{id} (lấy chi tiết sản phẩm với id cụ thể)
-Route::get('/admin/blogs/{id}', 'App\Controllers\Admin\BlogController@edit');
-
-// PUT /blogs/{id} (update sản phẩm với id cụ thể)
-Route::put('/admin/blogs/{id}', 'App\Controllers\Admin\BlogController@update');
-
-// DELETE /blogs/{id} (delete sản phẩm với id cụ thể)
-Route::delete('/admin/blogs/{id}', 'App\Controllers\Admin\BlogController@delete');
 
 
 //  *** User

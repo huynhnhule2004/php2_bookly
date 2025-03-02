@@ -70,8 +70,8 @@ class Edit extends BaseView
                                             </div>
                                             <div class="form-group">
                                                 <label for="user_id">Người đăng</label>
-                                                <!-- <input type="hidden" class="form-control" name="user_id" value="<?= $data['blog']['user_id'] ?>"> -->
-                                                <input type="text" class="form-control" id="user_id" placeholder="Chọn hình ảnh..." readonly value="<?= $data["blog"]["username"] ?>">
+                                                <input type="hidden" class="form-control" name="user_id" value="<?= $data['blog']['user_id'] ?>">
+                                                <input type="text" class="form-control" id="user_id" readonly value="<?= $data["user"][0]["author_name"] ?>">
                                             </div>
                                             <div class="form-group">
                                                 <label for="category_id">Loại bài viết*</label>

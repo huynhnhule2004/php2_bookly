@@ -15,7 +15,7 @@ class BlogCategory extends BaseView
             <?php
             foreach ($data as $item) :
             ?>
-                <a class="nav-link text-black" href="/blogs/categories/<?= $item['id'] ?>"><?= $item['name'] ?></a>
+                <a class="nav-link text-black" href="/blogs/categories/<?= $item['id'] ?>"><?= $item['category_name'] ?></a>
             <?php
             endforeach;
             ?>

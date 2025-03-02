@@ -73,6 +73,7 @@ class Index extends BaseView
                                                     <thead>
                                                         <tr>
                                                             <th>ID</th>
+                                                            <th>Mã đơn hàng</th>
                                                             <th>Khách hàng</th>
                                                             <th>Tổng giá</th>
                                                             <th>Trạng thái</th>
@@ -87,13 +88,17 @@ class Index extends BaseView
                                                         ?>
                                                             <tr>
                                                                 <td><?= $item['id'] ?></td>
-                                                                <td><?= $item['first_name'] ?></td>
+                                                                <td><?= $item['order_code'] ?></td>
+                                                                <td><?= $item['name'] ?></td>
                                                                 <td><?= number_format($item['total_price']) ?></td>
                                                                 <td>
                                                                     <?php
                                                                     switch ($item['status']) {
                                                                         case 'Pending':
                                                                             echo 'Đang chờ xử lý';
+                                                                            break;
+                                                                        case 'Processing':
+                                                                            echo 'Đang xử lý';
                                                                             break;
                                                                         case 'Shipped':
                                                                             echo 'Đang giao';

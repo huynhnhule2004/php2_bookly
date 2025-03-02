@@ -116,20 +116,20 @@ class Edit extends BaseView
                                             </div>
                                             <div class="form-group">
                                                 <label for="product_name">Tên*</label>
-                                                <input type="text" class="form-control" id="product_name" placeholder="Nhập tên sản phẩm..." name="product_name" value="<?= $data['product']['product_name'] ?>" required>
+                                                <input type="text" class="form-control" id="name" placeholder="Nhập tên sản phẩm..." name="name" value="<?= $data['product']['name'] ?>" required>
                                             </div>
                                             <div class="form-group">
                                                 <label for="category_id">Loại sản phẩm*</label>
                                                 <select class="select2 form-select shadow-none" style="width: 100%; height:36px;" id="category_id" name="category_id" required>
                                                     <option value="" selected disabled>Vui lòng chọn...</option>
 
-                                                    <!-- <?php
-                                                            foreach ($data['category'] as $item) :
-                                                            ?>
-                                                <option value="<?= $item['id'] ?>" <?= ($item['id'] == $data['product']['category_id']) ? 'selected' : '' ?>><?= $item['category_name'] ?></option>
-                                            <?php
-                                                            endforeach
-                                            ?> -->
+                                                    <?php
+                                                    foreach ($data['category'] as $item) :
+                                                    ?>
+                                                        <option value="<?= $item['id'] ?>" <?= ($item['id'] == $data['product']['category_id']) ? 'selected' : '' ?>><?= $item['category_name'] ?></option>
+                                                    <?php
+                                                    endforeach
+                                                    ?>
 
                                                 </select>
                                             </div>
@@ -139,15 +139,19 @@ class Edit extends BaseView
                                             </div>
                                             <div class="form-group row">
                                                 <div class="form-group col-md-6">
-                                                    <label for="price_default col-md-6">Giá tiền*</label>
-                                                    <input type="number" class="form-control" id="price_default" placeholder="Nhập giá tiền..." name="price_default" value="<?= $data['product']['price_default'] ?>" required>
+                                                    <label for="price">Giá tiền*</label>
+                                                    <input type="number" class="form-control" id="price" placeholder="Nhập giá tiền..." name="price" value="<?= $data['product']['price'] ?>" required>
                                                 </div>
                                                 <div class="form-group col-md-6">
                                                     <label for="discount_price ">Giá giảm*</label>
                                                     <input type="number" class="form-control" id="discount_price" placeholder="Nhập giá giảm..." name="discount_price" value="<?= $data['product']['discount_price'] ?>" required>
                                                 </div>
                                             </div>
-
+                                            <div class="form-group">
+                                                <label for="stock">Số lượng*</label>
+                                                <input class="form-control" name="stock" id="stock"
+                                                    placeholder="Nhập số lượng..." required value="<?= $data['product']['stock'] ?>" />
+                                            </div>
                                             <div class="form-group">
                                                 <label for="short_description">Mô tả ngắn</label>
                                                 <textarea class="form-control" name="short_description" id="short_description_editor" placeholder="Nhập mô tả ngắn..."><?= htmlspecialchars($data['product']['short_description']) ?></textarea>
@@ -170,6 +174,30 @@ class Edit extends BaseView
                                                     <option value="discontinued" <?= ($data['product']['status'] == 'discontinued' ? 'selected' : '') ?>>Ngừng hoạt động</option>
                                                 </select>
                                             </div>
+                                            <div class="form-group row">
+                                                <div class="form-group col-md-3">
+                                                    <label for="length">Chiều dài (cm)</label>
+                                                    <input type="number" class="form-control" id="length" placeholder="Nhập chiều dài..." name="length"
+                                                        value="<?= !empty($data['product']['length']) ? $data['product']['length'] : '' ?>" />
+                                                </div>
+                                                <div class="form-group col-md-3">
+                                                    <label for="width">Chiều rộng (cm)</label>
+                                                    <input type="number" class="form-control" id="width" placeholder="Nhập chiều rộng..." name="width"
+                                                        value="<?= !empty($data['product']['width']) ? $data['product']['width'] : '' ?>" />
+                                                </div>
+                                                <div class="form-group col-md-3">
+                                                    <label for="height">Chiều cao (cm)</label>
+                                                    <input type="number" class="form-control" id="height" placeholder="Nhập chiều cao..." name="height"
+                                                        value="<?= !empty($data['product']['height']) ? $data['product']['height'] : '' ?>" />
+                                                </div>
+                                                <div class="form-group col-md-3">
+                                                    <label for="weight">Cân nặng (g)</label>
+                                                    <input type="number" step="0.01" class="form-control" id="weight" placeholder="Nhập cân nặng..." name="weight"
+                                                        value="<?= !empty($data['product']['weight']) ? $data['product']['weight'] : '' ?>" />
+                                                </div>
+                                            </div>
+
+
                                         </div>
                                         <div class="border-top">
                                             <div class="card-body">
@@ -212,75 +240,6 @@ class Edit extends BaseView
                     .catch(error => {
                         console.error(error);
                     });
-                ClassicEditor
-                    .create(document.querySelector('#how_to_use_editor'))
-                    .catch(error => {
-                        console.error(error);
-                    });
-
-
-
-                document.getElementById('variant_button').addEventListener('click', function() {
-                    var variantFields = document.getElementById('variant_fields');
-                    variantFields.style.display = (variantFields.style.display === 'none' || variantFields.style.display === '') ? 'block' : 'none';
-                });
-
-                document.addEventListener("DOMContentLoaded", function() {
-                    var skus = <?php echo json_encode($data['skus']); ?>;
-                    const skuTable = document.getElementById("sku_table");
-                    const skuBody = document.getElementById("sku_body");
-                    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-
-                    // Chức năng tạo tổ hợp SKU
-                    function generateCombinations(arrays) {
-                        return arrays.reduce((a, b) => a.flatMap(d => b.map(e => [...d, e])), [
-                            []
-                        ]);
-                    }
-
-                    // Cập nhật SKUs
-                    function updateSKUs() {
-                        const selectedOptions = {};
-                        checkboxes.forEach(checkbox => {
-                            if (checkbox.checked) {
-                                const group = checkbox.dataset.group;
-                                const value = checkbox.dataset.value;
-                                if (!selectedOptions[group]) selectedOptions[group] = [];
-                                selectedOptions[group].push(value);
-                            }
-                        });
-
-                        if (Object.keys(selectedOptions).length === 0) {
-                            skuBody.innerHTML = "";
-                            return;
-                        }
-
-                        const combinations = generateCombinations(Object.values(selectedOptions));
-                        skuBody.innerHTML = "";
-
-                        combinations.forEach((combination, index) => {
-                            const sku = skus[index] || {}; // Lấy SKU nếu có hoặc tạo một object trống
-                            const row = document.createElement("tr");
-                            const APP_URL = "<?= APP_URL ?>";
-                            // Kiểm tra xem có dữ liệu SKU không và hiển thị tương ứng
-                            row.innerHTML = `
-                <td>${combination.join(' - ')}</td>
-                <input type="hidden" name="sku_id[]" value="${sku.id}" >
-                <td><input type="text" name="sku_code[]" value="${sku.sku || ''}" placeholder="Mã SKU" class="form-control"></td>
-                <td><input type="number" name="price[]" value="${sku.price || ''}" placeholder="Giá" class="form-control"></td>
-                <td><input type="number" name="stock_quantity[]" value="${sku.stock_quantity || ''}" placeholder="Tồn kho" class="form-control"></td>
-                <td><input type="file" name="sku_image[]" value="${APP_URL}/public/uploads/products/${sku.image || ''}" class="form-control"></td>
-            `;
-                            skuBody.appendChild(row);
-                        });
-                    }
-
-                    checkboxes.forEach(checkbox => {
-                        checkbox.addEventListener('change', updateSKUs);
-                    });
-
-                    updateSKUs();
-                });
             </script>
             <!-- ============================================================== -->
             <!-- End Container fluid  -->

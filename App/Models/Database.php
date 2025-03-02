@@ -5,12 +5,13 @@ namespace App\Models;
 use mysqli;
 use PDO;
 use PDOException;
+use Exception;
 
 class Database
 {
 
-    private $_host ;
-    private $_username ;
+    private $_host;
+    private $_username;
     private $_password;
     private $_database;
 
@@ -18,7 +19,7 @@ class Database
     {
         $this->_host = $_ENV['DB_HOST'];
         $this->_username = $_ENV['DB_USERNAME'];
-        $this->_password = $_ENV['DB_PASSWORD'] ;
+        $this->_password = $_ENV['DB_PASSWORD'];
         $this->_database = $_ENV['DB_NAME'];
     }
     // public function connect()
@@ -50,11 +51,20 @@ class Database
 
     public function MySQLi()
     {
-        $conn = new mysqli($this->_host, $this->_username, $this->_password, $this->_database);
+        try {
+            $conn = new mysqli($this->_host, $this->_username, $this->_password, $this->_database);
 
-        if ($conn->connect_error) {
-            die("Connection failed: " . $conn->connect_error);
+            if ($conn->connect_error) {
+                throw new Exception("Kết nối thất bại: " . $conn->connect_error);
+                // die("Connection failed: " . $conn->connect_error);
+            }
+            return $conn;
+        } catch (Exception $e) {
+            // Ghi log lỗi (hoặc hiển thị một thông báo tùy chỉnh)
+            error_log($e->getMessage());
+
+            // Có thể hiển thị thông báo thân thiện với người dùng thay vì lỗi hệ thống
+            die("Không thể kết nối đến cơ sở dữ liệu. Vui lòng thử lại sau.");
         }
-        return $conn;
     }
 }

@@ -2,8 +2,8 @@
 
 namespace App\Controllers\Client;
 
-use App\Helpers\AuthHelper;
 use App\Helpers\NotificationHelper;
+use App\Helpers\ViewProductHelper;
 use App\Models\Category;
 use App\Models\Comment;
 use App\Models\Product;
@@ -19,93 +19,89 @@ class ProductController
     // hiển thị danh sách
     public static function index()
     {
-        // giả sử data là mảng dữ liệu lấy được từ database
-        $categories = [
-            [
-                'id' => 1,
-                'name' => 'Danh mục 1',
-                'status' => 1
-            ],
-            [
-                'id' => 2,
-                'name' => 'Danh mục 2',
-                'status' => 1
-            ],
-            [
-                'id' => 3,
-                'name' => 'Danh mục 3',
-                'status' => 0
-            ],
+    
+        $category = new Category();
+        $categories = $category->getAllByStatus();
 
-        ];
-        $products = [
-            [
-                'id' => 1,
-                'name' => 'Sản phẩm 1',
-                'description' => 'Mô tả sản phẩm 1',
-                'price' => 100000,
-                'discount_price' => 10000,
-                'image' => 'product.jpg',
-                'status' => 1
-            ],
-            [
-                'id' => 2,
-                'name' => 'Sản phẩm 2',
-                'description' => 'Mô tả sản phẩm 2',
-                'price' => 200000,
-                'discount_price' => 20000,
-                'image' => 'product.jpg',
-                'status' => 1
-            ],
-            [
-                'id' => 3,
-                'name' => 'Sản phẩm 3',
-                'description' => 'Mô tả sản phẩm 3',
-                'price' => 300000,
-                'discount_price' => 30000,
-                'image' => 'product.jpg',
-                'status' => 1
-            ],
-            [
-                'id' => 3,
-                'name' => 'Sản phẩm 4',
-                'description' => 'Mô tả Sản phẩm 3',
-                'price' => 300000,
-                'discount_price' => 30000,
-                'image' => 'product.jpg',
-                'status' => 1
-            ],
-
-        ];
+        $product = new Product();
+        $products = $product->getAllProductByStatus();
+        
         $data = [
             'products' => $products,
             'categories' => $categories
         ];
-        Header::render();
-
+        Header::render($data);
+        Notification::render();
+        NotificationHelper::unset();
         Index::render($data);
         Footer::render();
     }
     public static function detail($id)
     {
-        $product_detail = [
-            'id' => $id,
-            'name' => 'Sản phẩm 1',
-            'description' => 'Mô tả sản phẩm 1',
-            'price' => 100000,
-            'discount_price' => 10000,
-            'image' => 'product.jpg',
-            'status' => 1
-        ];
-        $data = [
-            'product' => $product_detail
-        ];
-        Header::render();
+        $category = new Category();
+        $categories = $category->getAllByStatus();
 
+        $product = new Product();
+        $products = $product->getAllProductByStatus();
+        $product_detail = $product->getOneProductByStatus($id);
+        $recently_viewed_products = $product->getRecentlyViewedProducts();
+
+        if (!$product_detail) {
+            NotificationHelper::error('product_detail', 'Không thể xem sản phẩm này');
+            header('location: /products');
+            exit;
+        }
+
+        $comment = new Comment();
+        $comments = $comment->get5CommentNewestByProductAndStatus($id);
+
+        $data = [
+            'product' => $product_detail,
+            'comments' => $comments,
+            'products' => $products,
+            'categories' => $categories,
+        ];
+
+        $related_products = $product->getRelatedProducts($id, $data['product']['category_id']);
+
+        $data = [
+            'product' => $product_detail,
+            'comments' => $comments,
+            'products' => $products,
+            'categories' => $categories,
+            'related_products' => $related_products,
+            'recently_viewed_products' => $recently_viewed_products,
+        ];
+
+
+        $view_result = ViewProductHelper::cookieView($id, $product_detail['view']);
+
+        // var_dump($view_result);
+        // echo "<pre>";
+        // var_dump($data);
+
+        Header::render($data);
+        Notification::render();
+        NotificationHelper::unset();
         Detail::render($data);
         Footer::render();
     }
     public static function getProductByCategory($id)
     {
+        $category = new Category();
+        $categories = $category->getAllCategoryByStatus();
+
+        // var_dump($categories);
+        $product = new Product();
+        $products = $product->getAllProductByCategoryAndStatus($id);
+
+        $data = [
+            'products' => $products,
+            'categories' => $categories
+        ];
+
+        Header::render($data);
+        ProductCategory::render($data);
+        Footer::render();
     }
 }

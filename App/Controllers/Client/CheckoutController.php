@@ -18,47 +18,22 @@ class CheckoutController
     // hiển thị danh sách
     public static function index()
     {
-        // $category = new Category();
-        // $categories = $category->getAllCategoryByStatus();
+        if (!isset($_COOKIE['user'])) {
+            NotificationHelper::error('login', 'Bạn phải đăng nhập để thanh toán');
+            header('location: /');
+            exit();
 
-        // $data = [
-        //     'categories' => $categories
-        // ];
-
-        $cart = [
-            [
-                'buy' => [
-                    [
-                        'product_name' => 'Sản phẩm 1',
-                        'variant_options' => [
-                            [
-                                'product_variant_option_combination_id' => 'combo_1'
-                            ]
-                        ],
-                        'qty' => 2,
-                        'price_default' => 50000
-                    ],
-                    [
-                        'product_name' => 'Sản phẩm 2',
-                        'variant_options' => [
-                            [
-                                'product_variant_option_combination_id' => 'combo_2'
-                            ]
-                        ],
-                        'qty' => 1,
-                        'price_default' => 150000
-                    ]
-                ]
-            ]
-        ];
+        }
+        $category = new Category();
+        $categories = $category->getAllCategoryByStatus();
 
         $data = [
-            'cart' => $cart
+            'categories' => $categories
         ];
 
         Header::render();
         Notification::render();
-        // NotificationHelper::unset();
+        NotificationHelper::unset();
         Checkout::render($data);
         Footer::render();
     }

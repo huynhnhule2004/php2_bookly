@@ -12,91 +12,27 @@ use App\Views\Client\Pages\Blog\Detail;
 use App\Views\Client\Layouts\Header;
 use App\Models\Blog;
 use App\Models\Category;
+use App\Models\User;
 
 class BlogController
 {
     // hiển thị danh sách
     public static function index()
     {
-        // $category = new Category();
-        // $categories = $category->getAllCategoryByStatus();
+        $category = new Category();
+        $categories = $category->getAllCategoryByStatus();
 
+        $blog_category = new BlogCategory();
+        $blog_categories = $blog_category->getAll();
 
-        // $blog = new Blog();
-        // $postsPerPage = 3;
-        // $currentPage = 1; 
-        // $offset = 0; 
-        // $blogs = $blog->getBlogsWithLimit($postsPerPage, $offset);
-        // $totalPosts = $blog->countTotalBlogs();
-        // $totalPages = ceil($totalPosts / $postsPerPage);
-        // $data = [
-        //     'blogs' => $blogs,
-        //     'remainingPosts' => $totalPosts,
-        //     'currentPage' => $currentPage,
-        //     'totalPages' => $totalPages,
-        //     'categories' => $categories
+        $blog = new Blog();
+        $blogs = $blog->getAllBlogsJoinCategory();
 
-        // ];
-        $categories = [
-            [
-                'id' => 1,
-                'name' => 'Danh mục 1',
-                'status' => 1
-            ],
-            [
-                'id' => 2,
-                'name' => 'Danh mục 2',
-                'status' => 1
-            ],
-            [
-                'id' => 3,
-                'name' => 'Danh mục 3',
-                'status' => 0
-            ],
-
-        ];
-        $blogs = [
-            [
-                'id' => 1,
-                'name' => 'Product 1',
-                'description' => 'Description Product 1',
-                'price' => 100000,
-                'discount_price' => 10000,
-                'image' => 'product.jpg',
-                'status' => 1
-            ],
-            [
-                'id' => 2,
-                'name' => 'Product 2',
-                'description' => 'Description Product 2',
-                'price' => 200000,
-                'discount_price' => 20000,
-                'image' => 'product.jpg',
-                'status' => 1
-            ],
-            [
-                'id' => 3,
-                'name' => 'Product 3',
-                'description' => 'Description Product 3',
-                'price' => 300000,
-                'discount_price' => 30000,
-                'image' => 'product.jpg',
-                'status' => 1
-            ],
-            [
-                'id' => 3,
-                'name' => 'Product 3',
-                'description' => 'Description Product 3',
-                'price' => 300000,
-                'discount_price' => 30000,
-                'image' => 'product.jpg',
-                'status' => 1
-            ],
-
-        ];
+        
         $data = [
             'blogs' => $blogs,
-            'categories' => $categories
+            'categories' => $categories,
+            'blog_categories' => $blog_categories
         ];
         // Render các phần của trang
         Header::render();
@@ -106,65 +42,32 @@ class BlogController
 
     public static function detail($id)
     {
-        // $category1 = new Category();
-        // $categories1 = $category1->getAllCategoryByStatus();
+        $category1 = new Category();
+        $categories1 = $category1->getAllCategoryByStatus();
 
-        // $category = new BlogCategory;
-        // $categories = $category->getAll();
-        // $blog = new Blog();
-        // $blog_detail = $blog->getOneBlog($id);
+        $category = new BlogCategory;
+        $categories = $category->getAll();
+        $blog = new Blog();
+        $blog_detail = $blog->getOneBlog($id);
 
-        // $data = [
-        //     'categories' => $categories,
-        //     'blog_detail' => $blog_detail
-        // ];
+        $data = [
+            'categories' => $categories,
+            'blog_detail' => $blog_detail
+        ];
 
-        // $data1 = [
-        //     'categories' => $categories1,
-        // ];
+        $user = new User();
+        $users = $user->getOneUser($data['blog_detail']['user_id']);
+        $data['users'] = $users;
+
+        $data1 = [
+            'categories' => $categories1,
+        ];
 
         // echo "<pre>";
-        // var_dump($data1);
-        $data = [
-            'blog' => [
-                'id' => 1,
-                'title' => '10 Bí Quyết Giúp Bạn Thành Công Trong Công Việc',
-                'image' => APP_URL . '/public/assets/client/images/blog-image-1.jpg',
-                'author' => 'Lê Thị Huỳnh Như',
-                'published_date' => '2025-01-21',
-                'content' => '<p>Thành công không chỉ đến từ may mắn, mà còn là kết quả của sự kiên trì, học hỏi và không ngừng cải thiện bản thân. Trong bài viết này, chúng tôi sẽ chia sẻ 10 bí quyết quan trọng giúp bạn đạt được thành công trong công việc.</p>
-                              <p>1. Xác định mục tiêu rõ ràng.</p>
-                              <p>2. Lập kế hoạch chi tiết.</p>
-                              <p>3. Không ngừng học hỏi và cập nhật kiến thức.</p>',
-            ],
-            'comments' => [
-                [
-                    'name' => 'Nguyễn Văn A',
-                    'created_at' => '2025-01-20 14:30',
-                    'content' => 'Bài viết rất hữu ích! Cảm ơn tác giả đã chia sẻ.',
-                ],
-                [
-                    'name' => 'Trần Thị B',
-                    'created_at' => '2025-01-21 09:15',
-                    'content' => 'Mình rất thích phần lập kế hoạch chi tiết. Rất bổ ích!',
-                ],
-            ],
-            'related_blogs' => [
-                [
-                    'id' => 2,
-                    'title' => 'Cách Quản Lý Thời Gian Hiệu Quả Trong Công Việc',
-                    'image' => APP_URL . '/public/assets/client/images/blog-image-2.jpg',
-                ],
-                [
-                    'id' => 3,
-                    'title' => '7 Thói Quen Của Người Thành Công',
-                    'image' => APP_URL . '/public/assets/client/images/blog-image-3.jpg',
-                ],
-            ],
-        ];
+        // var_dump($data);
         
         
-        Header::render();
+        Header::render($data1);
         Detail::render($data);
         Footer::render();
     }

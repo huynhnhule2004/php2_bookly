@@ -45,7 +45,7 @@ class Create extends BaseView
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="card">
-                                    <form class="form-horizontal" action="/admin/users" method="POST" enctype="multipart/form-data">
+                                    <form class="form-horizontal" action="/admin/users" method="POST" enctype="multipart/form-data" onsubmit="return validatePhoneNumber()">
                                         <div class="card-body">
                                             <h4 class="card-title">Thêm người dùng</h4>
                                             <input type="hidden" name="method" id="" value="POST">
@@ -58,16 +58,13 @@ class Create extends BaseView
                                                 <input type="email" class="form-control" id="email" placeholder="Nhập email..." name="email" required>
                                             </div>
                                             <div class="form-group">
-                                                <label for="last_name">Họ*</label>
-                                                <input type="text" class="form-control" id="last_name" placeholder="Nhập họ và tên người dùng..." name="last_name" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="first_name">Tên*</label>
-                                                <input type="text" class="form-control" id="first_name" placeholder="Nhập họ người dùng..." name="first_name" required>
+                                                <label for="name">Họ và tên*</label>
+                                                <input type="text" class="form-control" id="name" placeholder="Nhập họ và tên người dùng..." name="name" required>
                                             </div>
                                             <div class="form-group">
                                                 <label for="phone_number">Số điện thoại*</label>
-                                                <input type="number" class="form-control" id="phone_number" placeholder="Nhập số điện thoại người dùng..." name="phone_number" required>
+                                                <input type="text" class="form-control" id="phone_number" placeholder="Nhập số điện thoại..." name="phone_number" required oninput="validateInput()">
+                                                <small id="phoneError" class="text-danger"></small>
                                             </div>
                                             <div class="form-group">
                                                 <label for="address">Địa chỉ*</label>
@@ -130,6 +127,35 @@ class Create extends BaseView
                 </div>
             </div>
 
+            <script>
+                function validateInput() {
+                    let phoneInput = document.getElementById("phone_number");
+                    let phoneError = document.getElementById("phoneError");
+                    let phoneNumber = phoneInput.value;
+
+                    // Xóa ký tự không phải số
+                    phoneInput.value = phoneNumber.replace(/\D/g, '');
+
+                    // Kiểm tra nếu số vượt quá 10 ký tự
+                    if (phoneInput.value.length > 10) {
+                        phoneInput.value = phoneInput.value.slice(0, 10);
+                    }
+                }
+
+                function validatePhoneNumber() {
+                    let phoneNumber = document.getElementById("phone_number").value;
+                    let phoneError = document.getElementById("phoneError");
+                    let phonePattern = /^0\d{9}$/; // Regex kiểm tra số điện thoại hợp lệ
+
+                    if (!phonePattern.test(phoneNumber)) {
+                        phoneError.innerText = "Số điện thoại không hợp lệ (phải có 10 số và bắt đầu bằng 0)";
+                        return false; // Ngăn form gửi đi
+                    }
+
+                    phoneError.innerText = ""; // Xóa lỗi nếu hợp lệ
+                    return true;
+                }
+            </script>
     <?php
     }
 }

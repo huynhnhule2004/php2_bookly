@@ -61,6 +61,9 @@ class Header extends BaseView
             <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
             <!-- Chart JS -->
             <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font/css/materialdesignicons.min.css">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
         </head>
 
         <body>

@@ -4,6 +4,8 @@ namespace App\Views\Client\Layouts;
 
 use App\Helpers\AuthHelper;
 use App\Views\BaseView;
+use App\Views\Client\Components\Header as ComponentsHeader;
+
 
 class Header extends BaseView
 {
@@ -192,33 +194,6 @@ class Header extends BaseView
                                 <use xlink:href="#search"></use>
                             </svg></button> -->
                     </form>
-
-                    <!-- <h5 class="cat-list-title">Danh mục</h5> -->
-
-                    <!-- <ul class="cat-list">
-                        <li class="cat-list-item">
-                            <a href="#" title="Romance">Romance</a>
-                        </li>
-                        <li class="cat-list-item">
-                            <a href="#" title="Thriller">Thriller</a>
-                        </li>
-                        <li class="cat-list-item">
-                            <a href="#" title="Sci-fi">Sci-fi</a>
-                        </li>
-                        <li class="cat-list-item">
-                            <a href="#" title="Cooking">Cooking</a>
-                        </li>
-                        <li class="cat-list-item">
-                            <a href="#" title="Health">Health</a>
-                        </li>
-                        <li class="cat-list-item">
-                            <a href="#" title="Lifestyle">Lifestyle</a>
-                        </li>
-                        <li class="cat-list-item">
-                            <a href="#" title="Fiction">Fiction</a>
-                        </li>
-                    </ul> -->
-
                 </div>
             </div>
 
@@ -270,21 +245,9 @@ class Header extends BaseView
                                         <a class="nav-link me-4 dropdown-toggle <?= ($_SERVER['REQUEST_URI'] == '/products' ? 'active' : '') ?>" data-bs-toggle="dropdown" href="#" role="button"
                                             aria-expanded="false">Sản phẩm</a>
                                         <ul class="dropdown-menu animate slide border">
-                                            <li>
-                                                <a href="/products" class="dropdown-item fw-light">Sách</a>
-                                            </li>
-                                            <li>
-                                                <a href="/products" class="dropdown-item fw-light">Dụng cụ viết</a>
-                                            </li>
-                                            <li>
-                                                <a href="/products" class="dropdown-item fw-light">Giấy và sổ</a>
-                                            </li>
-                                            <li>
-                                                <a href="/products" class="dropdown-item fw-light">Lưu trữ tài liệu</a>
-                                            </li>
-                                            <li>
-                                                <a href="/products" class="dropdown-item fw-light">Dụng cụ văn phòng</a>
-                                            </li>
+                                            <?php
+                                            ComponentsHeader::render($data['categories']);
+                                            ?>
                                         </ul>
                                     </li>
                                     <li class="nav-item">
@@ -322,6 +285,8 @@ class Header extends BaseView
                                                     <!-- <a class="nav-link" href="/logout">Đăng xuất</a> -->
                                                     <a class="dropdown-item m-0" href="/users/<?= $_SESSION['user']['id'] ?>" style="font-size: medium;"><?= $_SESSION['user']['username'] ?></a>
                                                     <a class="dropdown-item m-0" href="/change-password" style="font-size: medium;">Đổi mật khẩu</a>
+                                                    <a class="dropdown-item m-0" href="/orders/history"
+                                                            style="font-size: medium;">Lịch sử mua hàng</a>
                                                     <a class="dropdown-item m-0" href="/logout" style="font-size: medium;">Đăng xuất</a>
                                                 </div>
                                             </li>
@@ -415,12 +380,8 @@ class Header extends BaseView
                                                                         <div class="tab-pane fade" id="nav-forgot-password" role="tabpanel"
                                                                             aria-labelledby="nav-forgot-password-tab">
                                                                             <div class="form-group py-3">
-                                                                                <form action="/forgot-password" class="p-3" method="post">
+                                                                                <form action="/forgot-password/send" class="p-3" method="post">
                                                                                     <input type="hidden" name="method" value="POST" id="">
-                                                                                    <div class="mb-3">
-                                                                                        <label for="username">Tên đăng nhập*</label>
-                                                                                        <input type="text" name="username" id="username" class="form-control" placeholder="Nhập tên đăng nhập của bạn..." required>
-                                                                                    </div>
                                                                                     <div class="mb-3">
                                                                                         <label for="email">Email*</label>
                                                                                         <input type="email" name="email" id="email" class="form-control" placeholder="Nhập email của bạn..." required>
@@ -490,7 +451,7 @@ class Header extends BaseView
                                                 aria-expanded="false">
                                                 <svg class="cart">
                                                     <use xlink:href="#cart"></use>
-                                                </svg><span class="fs-6 fw-light">(02)</span>
+                                                </svg><span class="fs-6 fw-light"></span>
                                             </a>
                                             <div class="dropdown-menu animate slide dropdown-menu-start dropdown-menu-lg-end p-3">
                                                 <h4 class="d-flex justify-content-between align-items-center mb-3">

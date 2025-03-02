@@ -61,9 +61,9 @@ class Index extends BaseView
                                                             <th>Giá</th>
                                                             <th>Giá giảm</th>
                                                             <th>Loại</th>
+                                                            <th>Số lượng</th>
                                                             <th>Trạng thái</th>
                                                             <th>Nổi bật</th>
-                                                            <th>Mô tả ngắn</th>
                                                             <th></th>
                                                         </tr>
                                                     </thead>
@@ -76,10 +76,11 @@ class Index extends BaseView
                                                                 <td>
                                                                     <img src="<?= APP_URL ?>/public/uploads/products/<?= $item['image'] ?>" alt="" width="100px">
                                                                 </td>
-                                                                <td style="white-space: nowrap;"><?= $item['product_name'] ?></td>
-                                                                <td style="white-space: nowrap;"><?= number_format($item['price_default']) ?></td>
+                                                                <td style="white-space: nowrap;"><?= $item['name'] ?></td>
+                                                                <td style="white-space: nowrap;"><?= number_format($item['price']) ?></td>
                                                                 <td style="white-space: nowrap;"><?= number_format($item['discount_price']) ?></td>
                                                                 <td style="white-space: nowrap;"><?= $item['category_name'] ?></td>
+                                                                <td style="white-space: nowrap;"><?= $item['stock'] ?></td>
                                                                 <td style="white-space: nowrap;">
                                                                     <?php
                                                                     switch ($item['status']) {
@@ -99,7 +100,6 @@ class Index extends BaseView
                                                                     ?>
                                                                 </td>
                                                                 <td style="white-space: nowrap;"><?= $item['is_feature'] == 1 ? 'Nổi bật' : 'Không nổi bật' ?></td>
-                                                                <td style="white-space: nowrap;"><?= strlen($item['short_description']) > 50 ? substr($item['short_description'], 0, 50) . '...' : $item['short_description'] ?></td>
                                                                 <td style="white-space: nowrap;">
                                                                     <a href="/admin/products/<?= $item['id'] ?>" class="btn btn-primary ">Sửa</a>
                                                                     <form action="/admin/products/<?= $item['id'] ?>" method="post" style="display: inline-block;" onsubmit="return handleDelete(event)">

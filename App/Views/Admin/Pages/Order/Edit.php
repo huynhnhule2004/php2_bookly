@@ -56,7 +56,7 @@ class Edit extends BaseView
                                             <div class="form-group">
                                                 <label for="name">Tên khách hàng*</label>
                                                 <input type="hidden" name="user_id" value="<?= $data['user_id'] ?>">
-                                                <input type="text" class="form-control" id="name" placeholder="Nhập tên loại sản phẩm..." name="first_name" value="<?= $data['first_name'] ?>">
+                                                <input type="text" class="form-control" id="name" placeholder="Nhập tên khách hàng" name="name" value="<?= $data['name'] ?>">
                                             </div>
                                             <div class="form-group">
                                                 <label for="total_price">Đơn giá</label>
@@ -73,12 +73,14 @@ class Edit extends BaseView
                                             <div class="form-group">
                                                 <label for="status">Trạng thái*</label>
                                                 <select class="select2 form-select shadow-none" style="width: 100%; height:36px;" id="status" name="status" required>
-                                                    <option value="" disabled>Vui lòng chọn...</option>
+                                                    <option value="" disabled <?= empty($data['status']) ? 'selected' : '' ?>>Vui lòng chọn...</option>
                                                     <option value="Pending" <?= ($data['status'] == 'Pending' ? 'selected' : '') ?>>Đang chờ xử lý</option>
+                                                    <option value="Processing" <?= ($data['status'] == 'Processing' ? 'selected' : '') ?>>Đang xử lý</option>
                                                     <option value="Shipped" <?= ($data['status'] == 'Shipped' ? 'selected' : '') ?>>Đã vận chuyển</option>
                                                     <option value="Delivered" <?= ($data['status'] == 'Delivered' ? 'selected' : '') ?>>Đã giao hàng</option>
                                                     <option value="Cancelled" <?= ($data['status'] == 'Cancelled' ? 'selected' : '') ?>>Đã hủy</option>
                                                 </select>
+
                                             </div>
                                             <div class="form-group">
                                                 <input type="hidden" name="payment_method" value="<?= $data['payment_method'] ?>">

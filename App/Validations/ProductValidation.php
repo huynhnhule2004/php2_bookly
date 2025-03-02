@@ -7,9 +7,52 @@ use App\Helpers\NotificationHelper;
 
 class ProductValidation
 {
+    protected static $errors = [];
+
+    public static function validate(array $data)
+    {
+        self::$errors = []; // Reset lỗi trước khi validate
+
+        // Tên sản phẩm
+        if (empty($data['name'])) {
+            self::addError('name', 'Không để trống tên sản phẩm');
+        }
+
+        // Giá tiền
+        if (empty($data['price'])) {
+            self::addError('price', 'Không để trống giá tiền');
+        } elseif ((int) $data['price'] <= 0) {
+            self::addError('price', 'Giá tiền phải lớn hơn 0');
+        }
+
+        // Giá giảm
+        if (empty($data['discount_price'])) {
+            self::addError('discount_price', 'Không để trống giá giảm');
+        } elseif ((int) $data['discount_price'] < 0) {
+            self::addError('discount_price', 'Giá giảm phải lớn hơn hoặc bằng 0');
+        } elseif ((int) $data['discount_price'] > (int) $data['price']) {
+            self::addError('discount_price', 'Giá giảm phải nhỏ hơn giá tiền');
+        }
+
+        // id loại sản phẩm
+        if (empty($data['category_id'])) {
+            self::addError('category_id', 'Không để trống loại sản phẩm');
+        }
+
+        // Nổi bật
+        if (!isset($data['is_feature']) || $data['is_feature'] === '') {
+            self::addError('is_feature', 'Không để trống nổi bật');
+        }
+
+        // Trạng thái
+        if (!isset($data['status']) || $data['status'] === '') {
+            self::addError('status', 'Không để trống trạng thái');
+        }
+
+    }
+
     public static function create(): bool
     {
-
         $is_valid = true;
 
         // Tên sản phẩm
@@ -94,5 +137,15 @@ class ProductValidation
         }
 
         return $nameImage;
+    }
+
+    protected static function addError(string $field, string $message): void
+    {
+        self::$errors[$field] = $message;
+    }
+
+    public static function getErrors(): array
+    {
+        return self::$errors;
     }
 }

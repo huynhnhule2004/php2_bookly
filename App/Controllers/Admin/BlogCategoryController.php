@@ -19,40 +19,12 @@ class BlogCategoryController
     // hiển thị danh sách
     public static function index()
     {
-        // $category = new BlogCategory();
-        // $data = $category->getAllCategory();
-        $data = [
-            [
-                'id' => 1,
-                'category_name' => 'Công Nghệ',
-                'description' => 'Chia sẻ các bài viết, tin tức mới nhất về công nghệ, cập nhật xu hướng công nghệ toàn cầu.',
-            ],
-            [
-                'id' => 2,
-                'category_name' => 'Sức Khỏe',
-                'description' => 'Cung cấp thông tin hữu ích về sức khỏe, các bài viết về chăm sóc cơ thể và lối sống lành mạnh.',
-            ],
-            [
-                'id' => 3,
-                'category_name' => 'Giáo Dục',
-                'description' => 'Tổng hợp các bài viết về giáo dục, kỹ năng mềm và phương pháp học tập hiệu quả.',
-            ],
-            [
-                'id' => 4,
-                'category_name' => 'Kinh Doanh',
-                'description' => 'Chia sẻ các bài viết về kinh doanh, khởi nghiệp và quản lý tài chính cá nhân.',
-            ],
-            [
-                'id' => 5,
-                'category_name' => 'Du Lịch',
-                'description' => 'Gợi ý các địa điểm du lịch hấp dẫn, kinh nghiệm du lịch và các mẹo hữu ích khi đi du lịch.',
-            ],
-        ];
+        $category = new BlogCategory();
+        $data = $category->getAllCategory();
 
         Header::render();
-        // Notification::render();
-        // NotificationHelper::unset();
-        // hiển thị giao diện danh sách
+        Notification::render();
+        NotificationHelper::unset();
         Index::render($data);
         Footer::render();
     }
@@ -63,9 +35,8 @@ class BlogCategoryController
     {
         // var_dump($_SESSION);
         Header::render();
-        // Notification::render();
-        // NotificationHelper::unset();
-        // hiển thị form thêm
+        Notification::render();
+        NotificationHelper::unset();
         Create::render();
         Footer::render();
     }
@@ -74,59 +45,59 @@ class BlogCategoryController
     // xử lý chức năng thêm
     public static function store()
     {
-        // // validation các trường dữ liệu
-        // $is_valid = BlogCategoryValidation::create();
+        // validation các trường dữ liệu
+        $is_valid = BlogCategoryValidation::create();
 
-        // if (!$is_valid) {
-        //     NotificationHelper::error('store', 'Thêm danh mục bài viết thất bại');
-        //     header('location: /admin/blog_categories/create');
-        //     exit;
-        // }
+        if (!$is_valid) {
+            NotificationHelper::error('store', 'Thêm danh mục bài viết thất bại');
+            header('location: /admin/blog_categories/create');
+            exit;
+        }
 
-        // $category_name = $_POST['category_name'];
-        // $description = $_POST['description'];
+        $category_name = $_POST['category_name'];
+        $description = $_POST['description'];
 
-        // // Kiểm tra tên loại có tồn tại chưa => không được trùng tên
-        // $category = new BlogCategory();
-        // $is_exist = $category->getOneCategoryByName($category_name);
+        // Kiểm tra tên loại có tồn tại chưa => không được trùng tên
+        $category = new BlogCategory();
+        $is_exist = $category->getOneCategoryByName($category_name);
 
-        // if ($is_exist) {
-        //     NotificationHelper::error('store', 'Tên danh mục bài viết này đã tồn tại');
-        //     header('location: /admin/blog_categories/create');
-        //     exit;
-        // }
+        if ($is_exist) {
+            NotificationHelper::error('store', 'Tên danh mục bài viết này đã tồn tại');
+            header('location: /admin/blog_categories/create');
+            exit;
+        }
 
-        // // Kiểm tra và xử lý file ảnh nếu có
-        // if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
-        //     // Gọi hàm upload image
-        //     $is_upload = BlogCategoryValidation::uploadImage();  // Hàm upload hình ảnh
+        // Kiểm tra và xử lý file ảnh nếu có
+        if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
+            // Gọi hàm upload image
+            $is_upload = BlogCategoryValidation::uploadImage();  // Hàm upload hình ảnh
 
-        //     if ($is_upload) {
-        //         $image_path = $is_upload; // Đường dẫn của hình ảnh đã upload
-        //     } else {
-        //         NotificationHelper::error('store', 'Lỗi khi tải ảnh lên');
-        //         header('location: /admin/blog_categories/create');
-        //         exit;
-        //     }
-        // } else {
-        //     $image_path = null;  // Nếu không có ảnh, có thể để trống hoặc gán giá trị mặc định
-        // }
+            if ($is_upload) {
+                $image_path = $is_upload; // Đường dẫn của hình ảnh đã upload
+            } else {
+                NotificationHelper::error('store', 'Lỗi khi tải ảnh lên');
+                header('location: /admin/blog_categories/create');
+                exit;
+            }
+        } else {
+            $image_path = null;  // Nếu không có ảnh, có thể để trống hoặc gán giá trị mặc định
+        }
 
-        // // Thực hiện thêm dữ liệu
-        // $data = [
-        //     'category_name' => $category_name,
-        //     'description' => $description,
-        // ];
+        // Thực hiện thêm dữ liệu
+        $data = [
+            'category_name' => $category_name,
+            'description' => $description,
+        ];
 
-        // $result = $category->createCategory($data);
+        $result = $category->createCategory($data);
 
-        // if ($result) {
-        //     NotificationHelper::success('store', 'Thêm danh mục bài viết thành công');
-        //     header('location: /admin/blog_categories');
-        // } else {
-        //     NotificationHelper::error('store', 'Thêm danh mục bài viết thất bại');
-        //     header('location: /admin/blog_categories/create');
-        // }
+        if ($result) {
+            NotificationHelper::success('store', 'Thêm danh mục bài viết thành công');
+            header('location: /admin/blog_categories');
+        } else {
+            NotificationHelper::error('store', 'Thêm danh mục bài viết thất bại');
+            header('location: /admin/blog_categories/create');
+        }
     }
 
 
@@ -137,24 +108,18 @@ class BlogCategoryController
     // hiển thị giao diện form sửa
     public static function edit(int $id)
     {
-        // $category = new BlogCategory();
-        // $data = $category->getOneCategory($id);
+        $category = new BlogCategory();
+        $data = $category->getOneCategory($id);
 
-        // if (!$data) {
-        //     NotificationHelper::error('edit', 'Không thể xem danh mục bài viết này');
-        //     header('location: /admin/blog_categories/');
-        //     exit;
-        // }
-        $data = [
-            'id' => 1,
-            'category_name' => 'Công Nghệ',
-            'description' => 'Chia sẻ các bài viết, tin tức mới nhất về công nghệ, cập nhật xu hướng công nghệ toàn cầu.',
-        ];
+        if (!$data) {
+            NotificationHelper::error('edit', 'Không thể xem danh mục bài viết này');
+            header('location: /admin/blog_categories/');
+            exit;
+        }
 
         Header::render();
-        // Notification::render();
-        // NotificationHelper::unset();
-        // hiển thị form sửa
+        Notification::render();
+        NotificationHelper::unset();
         Edit::render($data);
         Footer::render();
     }
@@ -163,74 +128,74 @@ class BlogCategoryController
     // xử lý chức năng sửa (cập nhật)
     public static function update(int $id)
     {
-        // // validation các trường dữ liệu
-        // $is_valid = BlogCategoryValidation::edit();
+        // validation các trường dữ liệu
+        $is_valid = BlogCategoryValidation::edit();
 
-        // if (!$is_valid) {
-        //     NotificationHelper::error('update', 'Cập nhật danh mục bài viết thất bại');
-        //     header("location: /admin/blog_categories/$id");
-        //     exit;
-        // }
+        if (!$is_valid) {
+            NotificationHelper::error('update', 'Cập nhật danh mục bài viết thất bại');
+            header("location: /admin/blog_categories/$id");
+            exit;
+        }
 
-        // $category_name = $_POST['category_name'];
-        // $description = $_POST['description'];
+        $category_name = $_POST['category_name'];
+        $description = $_POST['description'];
 
-        // // Kiểm tra tên loại có tồn tại chưa => không được trùng tên
-        // $category = new BlogCategory();
-        // $is_exist = $category->getOneCategoryByName($category_name);
+        // Kiểm tra tên loại có tồn tại chưa => không được trùng tên
+        $category = new BlogCategory();
+        $is_exist = $category->getOneCategoryByName($category_name);
 
-        // if ($is_exist && $is_exist['id'] != $id) {
-        //     NotificationHelper::error('update', 'Tên danh mục bài viết này đã tồn tại');
-        //     header("location: /admin/blog_categories/$id");
-        //     exit;
-        // }
+        if ($is_exist && $is_exist['id'] != $id) {
+            NotificationHelper::error('update', 'Tên danh mục bài viết này đã tồn tại');
+            header("location: /admin/blog_categories/$id");
+            exit;
+        }
 
-        // // Kiểm tra và xử lý file ảnh nếu có
-        // $image_path = $category->getOneCategory($id)['image']; // giữ lại ảnh cũ nếu không có ảnh mới
-        // if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
-        //     $is_upload = BlogCategoryValidation::uploadImage();
+        // Kiểm tra và xử lý file ảnh nếu có
+        $image_path = $category->getOneCategory($id)['image']; // giữ lại ảnh cũ nếu không có ảnh mới
+        if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
+            $is_upload = BlogCategoryValidation::uploadImage();
 
-        //     if ($is_upload) {
-        //         $image_path = $is_upload; // Đường dẫn của hình ảnh mới
-        //     } else {
-        //         NotificationHelper::error('update', 'Lỗi khi tải ảnh lên');
-        //         header("location: /admin/blog_categories/$id");
-        //         exit;
-        //     }
-        // }
+            if ($is_upload) {
+                $image_path = $is_upload; // Đường dẫn của hình ảnh mới
+            } else {
+                NotificationHelper::error('update', 'Lỗi khi tải ảnh lên');
+                header("location: /admin/blog_categories/$id");
+                exit;
+            }
+        }
 
-        // // Thực hiện cập nhật
-        // $data = [
-        //     'category_name' => $category_name,
-        //     'description' => $description,
-        // ];
+        // Thực hiện cập nhật
+        $data = [
+            'category_name' => $category_name,
+            'description' => $description,
+        ];
 
-        // $result = $category->updateCategory($id, $data);
+        $result = $category->updateCategory($id, $data);
 
-        // if ($result) {
-        //     NotificationHelper::success('update', 'Cập nhật danh mục bài viết thành công');
-        //     header('location: /admin/blog_categories');
-        // } else {
-        //     NotificationHelper::error('update', 'Cập nhật danh mục bài viết thất bại');
-        //     header("location: /admin/blog_categories/$id");
-        // }
-        // var_dump($_POST);
-        // exit;
+        if ($result) {
+            NotificationHelper::success('update', 'Cập nhật danh mục bài viết thành công');
+            header('location: /admin/blog_categories');
+        } else {
+            NotificationHelper::error('update', 'Cập nhật danh mục bài viết thất bại');
+            header("location: /admin/blog_categories/$id");
+        }
+        var_dump($_POST);
+        exit;
     }
 
 
     // thực hiện xoá
     public static function delete(int $id)
     {
-        // $category = new BlogCategory();
-        // $result = $category->deleteCategory($id);
+        $category = new BlogCategory();
+        $result = $category->deleteCategory($id);
 
-        // // var_dump($result);
-        // if ($result) {
-        //     NotificationHelper::success('delete', 'Xóa danh mục bài viết thành công');
-        // } else {
-        //     NotificationHelper::error('delete', 'Xóa danh mục bài viết thất bại');
-        // }
+        // var_dump($result);
+        if ($result) {
+            NotificationHelper::success('delete', 'Xóa danh mục bài viết thành công');
+        } else {
+            NotificationHelper::error('delete', 'Xóa danh mục bài viết thất bại');
+        }
 
         header('location: /admin/blog_categories');
     }

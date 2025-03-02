@@ -51,49 +51,22 @@ class Index extends BaseView
                             foreach ($data['products'] as $item) :
                             ?>
                                 <div class="col-md-4 ">
-                                    <!-- <div class="card mb-4 shadow-sm">
-                                        <img src="<?= APP_URL ?>/public/uploads/products/<?= $item['image'] ?>" class="card-img-top" alt="" style="width: 100%; display: block;" data-holder-rendered="true">
-                                        <div class="card-body">
-                                            <p class="card-text"><?= $item['name'] ?></p>
-                                            <?php
-                                            if ($item['discount_price'] > 0) :
-                                            ?>
-                                                <p>Giá gốc: <strike><?= number_format($item['price']) ?> đ</strike></p>
-                                                <p>Giá giảm: <strong class="text-danger"><?= number_format($item['price'] - $item['discount_price']) ?> đ</strong></p>
-
-                                            <?php
-                                            else :
-                                            ?>
-                                                <p>Giá tiền: <?= number_format($item['price']) ?> đ</p>
-
-                                            <?php
-                                            endif;
-                                            ?>
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <div class="btn-group">
-                                                    <a href="/products/<?= $item['id'] ?>" type="button" class="btn btn-sm btn-outline-info">Chi tiết</a>
-                                                    <form action="/cart/add" method="post">
-                                                        <input type="hidden" name="method" id="" value="POST">
-                                                        <input type="hidden" name="id" id="" value="<?= $item['id'] ?>" required>
-                                                        <button type="submit" class="btn btn-sm btn-outline-success">Thêm vào giỏ hàng</button>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div> -->
-
                                     <div class="card position-relative p-4 border rounded-3 mb-4">
                                         <div class="position-absolute">
-                                            <p class="bg-primary py-1 px-3 fs-6 text-white rounded-2">-10%</p>
+                                            <?php if ($item['discount_price'] > 0): ?>
+                                                <p class="bg-primary py-1 px-3 fs-6 text-white rounded-2">
+                                                    -<?= number_format(($item['discount_price'] / $item['price']) * 100) ?>%
+                                                </p>
+                                            <?php endif; ?>
                                         </div>
                                         <a href="/products/<?= $item['id'] ?>">
                                             <img src="<?= APP_URL ?>/public/uploads/products/<?= $item['image'] ?>" class="img-fluid shadow-sm" alt="product item">
                                         </a>
                                         <h5 class="mt-4 mb-0 fw-bold "><a href="/products/<?= $item['id'] ?>"><?= $item['name'] ?></a></h5>
                                         <div class="review-content d-flex  mb-2">
-                                            <p class="my-2 me-2 fs-6 text-black-50">Lauren Asher</p>
+                                            <!-- <p class="my-2 me-2 fs-6 text-black-50">Lauren Asher</p> -->
 
-                                            <div class="rating text-warning d-flex align-items-center">
+                                            <div class="rating text-warning d-flex align-items-center my-2 me-2">
                                                 <svg class="star star-fill">
                                                     <use xlink:href="#star-fill"></use>
                                                 </svg>
@@ -127,12 +100,17 @@ class Index extends BaseView
                                         endif;
                                         ?>
                                         <div class="card-concern position-absolute start-0 end-0 d-flex gap-2">
-                                            <button type="button" href="#" class="btn btn-dark" data-bs-toggle="tooltip" data-bs-placement="top"
-                                                data-bs-title="Tooltip on top">
-                                                <svg class="cart">
-                                                    <use xlink:href="#cart"></use>
-                                                </svg>
-                                            </button>
+                                            <form action="/cart/add" method="post">
+                                                <input type="hidden" name="method" id="" value="POST">
+                                                <input type="hidden" name="id" id="" value="<?= $item['id'] ?>" required>
+                                                <input type="hidden" id="quantity" name="quantity" value="1" min="1">
+                                                <button type="submit" href="#" class="btn btn-dark" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                    data-bs-title="Tooltip on top">
+                                                    <svg class="cart">
+                                                        <use xlink:href="#cart"></use>
+                                                    </svg>
+                                                </button>
+                                            </form>
                                             <a href="#" class="btn btn-dark">
                                                 <span>
                                                     <svg class="wishlist">

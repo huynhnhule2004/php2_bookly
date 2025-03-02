@@ -8,6 +8,9 @@ class Create extends BaseView
 {
     public static function render($data = null)
     {
+        $errors = $data['errors'] ?? [];
+        // var_dump($data['name']);
+        // die();
 ?>
         <style>
             #variant_fields .form-group label.variant-option {
@@ -103,18 +106,20 @@ class Create extends BaseView
                                             <h4 class="card-title">Thêm sản phẩm</h4>
                                             <input type="hidden" name="method" id="" value="POST">
                                             <div class="form-group">
-                                                <label for="product_name">Tên*</label>
-                                                <input type="text" class="form-control" id="product_name"
-                                                    placeholder="Nhập tên sản phẩm..." name="product_name" required>
+                                                <label for="name">Tên*</label>
+                                                <input type="text" class="form-control" id="name"
+                                                    placeholder="Nhập tên sản phẩm..." name="name" required />
+                                                <?php if (isset($errors['name'])): ?>
+                                                    <p style="color: red"><?= $errors['name'] ?></p>
+                                                <?php endif; ?>
                                             </div>
                                             <div class="form-group">
                                                 <label for="category_id">Loại sản phẩm*</label>
-                                                <select class="select2 form-select shadow-none" style="width: 100%; height:36px;"
-                                                    id="category_id" name="category_id" required>
+                                                <select class="select2 form-select shadow-none" style="width: 100%; height:36px;" id="category_id" name="category_id" required>
                                                     <option value="" selected disabled>Vui lòng chọn...</option>
 
                                                     <?php
-                                                    foreach ($data['categories'] as $item):
+                                                    foreach ($data as $item) :
                                                     ?>
                                                         <option value="<?= $item['id'] ?>"><?= $item['category_name'] ?></option>
                                                     <?php
@@ -132,13 +137,18 @@ class Create extends BaseView
                                                 <div class="form-group col-md-6">
                                                     <label for="price">Giá tiền*</label>
                                                     <input type="number" class="form-control" id="price" placeholder="Nhập giá tiền..."
-                                                        name="price_default" required>
+                                                        name="price" required>
                                                 </div>
                                                 <div class="form-group col-6">
                                                     <label for="discount_price">Giá giảm*</label>
                                                     <input type="number" class="form-control" id="discount_price"
                                                         placeholder="Nhập giá giảm..." name="discount_price" required>
                                                 </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="stock">Số lượng*</label>
+                                                <input class="form-control" name="stock" id="stock"
+                                                    placeholder="Nhập số lượng..." required />
                                             </div>
                                             <div class="form-group">
                                                 <label for="image">Hình ảnh</label>
@@ -150,7 +160,6 @@ class Create extends BaseView
                                                 <textarea class="form-control" name="short_description" id="short_description_editor"
                                                     placeholder="Nhập mô tả ngắn..."></textarea>
                                             </div>
-
                                             <div class="form-group">
                                                 <label for="is_feature">Nổi bật*</label>
                                                 <select class="select2 form-select shadow-none" style="width: 100%; height:36px;"
@@ -170,6 +179,25 @@ class Create extends BaseView
                                                     <option value="discontinued">Ngừng hoạt động</option>
                                                 </select>
                                             </div>
+                                            <div class="form-group row">
+                                                <div class="form-group col-md-3">
+                                                    <label for="length">Chiều dài (cm)*</label>
+                                                    <input type="number" class="form-control" id="length" placeholder="Nhập chiều dài..." name="length" required>
+                                                </div>
+                                                <div class="form-group col-md-3">
+                                                    <label for="width">Chiều rộng (cm)*</label>
+                                                    <input type="number" class="form-control" id="width" placeholder="Nhập chiều rộng..." name="width" required>
+                                                </div>
+                                                <div class="form-group col-md-3">
+                                                    <label for="height">Chiều cao (cm)*</label>
+                                                    <input type="number" class="form-control" id="height" placeholder="Nhập chiều cao..." name="height" required>
+                                                </div>
+                                                <div class="form-group col-md-3">
+                                                    <label for="weight">Cân nặng (g)*</label>
+                                                    <input type="number" step="0.01" class="form-control" id="weight" placeholder="Nhập cân nặng..." name="weight" required>
+                                                </div>
+                                            </div>
+
                                         </div>
                                         <div class="border-top">
                                             <div class="card-body">
@@ -235,63 +263,40 @@ class Create extends BaseView
                     }
                 });
 
-                document.addEventListener("DOMContentLoaded", function() {
-                    const checkboxes = document.querySelectorAll(".variant-checkbox");
-                    const skuTable = document.getElementById("sku_table");
-                    const skuBody = document.getElementById("sku_body");
 
-                    // Hàm lấy tổ hợp Cartesian Product
-                    function generateCombinations(arrays) {
-                        return arrays.reduce((acc, curr) => acc.flatMap(a => curr.map(b => [...a, b])), [
-                            []
-                        ]);
-                    }
 
-                    // Hàm cập nhật tổ hợp SKU
-                    function updateSKUs() {
-                        const selectedOptions = {};
+                $(document).ready(function() {
+                    $(".form-horizontal").submit(function(event) {
+                        let isValid = true;
 
-                        // Lấy tất cả các tùy chọn đã chọn, nhóm theo nhóm thuộc tính
-                        checkboxes.forEach(checkbox => {
-                            if (checkbox.checked) {
-                                const group = checkbox.dataset.group;
-                                const value = checkbox.dataset.value;
-                                if (!selectedOptions[group]) selectedOptions[group] = [];
-                                selectedOptions[group].push(value);
-                            }
-                        });
+                        // Reset lỗi cũ
+                        $(".error-message").text("");
 
-                        // Kiểm tra nếu không có biến thể nào được chọn
-                        if (Object.keys(selectedOptions).length === 0) {
-                            skuTable.style.display = "none";
-                            skuBody.innerHTML = "";
-                            return;
+                        // Kiểm tra tên sản phẩm
+                        let name = $("#name").val().trim();
+                        if (name === "") {
+                            $("#name").next(".error-message").text("Vui lòng nhập tên sản phẩm");
+                            isValid = false;
                         }
 
-                        // Tạo tổ hợp biến thể
-                        const combinations = generateCombinations(Object.values(selectedOptions));
+                        // Kiểm tra giá tiền
+                        let price = $("#price").val();
+                        if (price === "" || parseFloat(price) <= 0) {
+                            $("#price").next(".error-message").text("Giá tiền phải lớn hơn 0");
+                            isValid = false;
+                        }
 
-                        // Hiển thị các tổ hợp trong bảng SKU
-                        skuBody.innerHTML = ""; // Xóa dữ liệu cũ
-                        combinations.forEach(combination => {
-                            const row = document.createElement("tr");
-                            row.innerHTML = `
-                                        <td>${combination.join(' - ')}</td>
-                                        <td><input type="text" name="sku_code[]" placeholder="Mã SKU" class="form-control"></td>
-                                        <td><input type="number" name="price[]" placeholder="Giá" class="form-control"></td>
-                                        <td><input type="number" name="stock_quantity[]" placeholder="Tồn kho" class="form-control"></td>
-                                        <td><input type="file" name="sku_image[]" class="form-control"></td>
-                                        `;
-                            skuBody.appendChild(row);
-                        });
+                        // Kiểm tra số lượng
+                        let stock = $("#stock").val();
+                        if (stock === "" || parseInt(stock) < 1) {
+                            $("#stock").next(".error-message").text("Số lượng phải lớn hơn 0");
+                            isValid = false;
+                        }
 
-                        // Hiển thị bảng SKU
-                        skuTable.style.display = "block";
-                    }
-
-                    // Lắng nghe sự kiện khi checkbox được chọn hoặc bỏ chọn
-                    checkboxes.forEach(checkbox => {
-                        checkbox.addEventListener("change", updateSKUs);
+                        // Ngăn form gửi nếu có lỗi
+                        if (!isValid) {
+                            event.preventDefault();
+                        }
                     });
                 });
             </script>

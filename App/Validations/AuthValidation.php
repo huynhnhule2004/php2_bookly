@@ -54,11 +54,6 @@ class AuthValidation
             }
         }
 
-        // Họ và tên
-        // if (!isset($_POST['name']) || $_POST['name'] === '') {
-        //     NotificationHelper::error('name', 'Không để trống họ và tên');
-        //     $is_valid = false;
-        // }
 
         return $is_valid;
     }

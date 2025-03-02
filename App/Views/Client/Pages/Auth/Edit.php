@@ -31,14 +31,13 @@ class Edit extends BaseView
           if ($data && $data['avatar']) :
           ?>
 
-            <img src="<?= APP_URL ?>/public/uploads/users/<?= $data['avatar'] ?>" alt="" width="100%">
+            <img src="<?= APP_URL ?>/public/uploads/users/<?= $data['avatar'] ?>" alt="" width="100%" class="rounded-3">
 
           <?php
           else :
           ?>
 
-            <img src="<?= APP_URL ?>/public/uploads/users/default-user.jpg" alt="" width="100%">
-
+            <img src="<?= APP_URL ?>/public/uploads/users/default-user.jpg" alt="" width="100%" class="rounded-3">
 
           <?php
           endif;
