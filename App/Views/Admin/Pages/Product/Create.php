@@ -8,7 +8,7 @@ class Create extends BaseView
 {
     public static function render($data = null)
     {
-        $errors = $data['errors'] ?? [];
+
         // var_dump($data['name']);
         // die();
 ?>
@@ -108,14 +108,12 @@ class Create extends BaseView
                                             <div class="form-group">
                                                 <label for="name">Tên*</label>
                                                 <input type="text" class="form-control" id="name"
-                                                    placeholder="Nhập tên sản phẩm..." name="name" required />
-                                                <?php if (isset($errors['name'])): ?>
-                                                    <p style="color: red"><?= $errors['name'] ?></p>
-                                                <?php endif; ?>
+                                                    placeholder="Nhập tên sản phẩm..." name="name" />
+                                                    <span class="error-message text-danger"></span>
                                             </div>
                                             <div class="form-group">
                                                 <label for="category_id">Loại sản phẩm*</label>
-                                                <select class="select2 form-select shadow-none" style="width: 100%; height:36px;" id="category_id" name="category_id" required>
+                                                <select class="select2 form-select shadow-none" style="width: 100%; height:36px;" id="category_id" name="category_id">
                                                     <option value="" selected disabled>Vui lòng chọn...</option>
 
                                                     <?php
@@ -127,28 +125,33 @@ class Create extends BaseView
                                                     ?>
 
                                                 </select>
+                                                <span class="error-message text-danger" id="category_id-error"></span>
                                             </div>
                                             <div class="form-group">
                                                 <label for="long_description">Mô tả</label>
                                                 <textarea class="form-control" name="long_description" id="long_description_editor"
                                                     placeholder="Nhập mô tả..."></textarea>
+                                                    <span class="error-message text-danger"></span>
                                             </div>
                                             <div class="form-group row">
                                                 <div class="form-group col-md-6">
                                                     <label for="price">Giá tiền*</label>
                                                     <input type="number" class="form-control" id="price" placeholder="Nhập giá tiền..."
-                                                        name="price" required>
+                                                        name="price">
+                                                    <span class="error-message text-danger"></span>
                                                 </div>
                                                 <div class="form-group col-6">
                                                     <label for="discount_price">Giá giảm*</label>
                                                     <input type="number" class="form-control" id="discount_price"
-                                                        placeholder="Nhập giá giảm..." name="discount_price" required>
+                                                        placeholder="Nhập giá giảm..." name="discount_price">
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label for="stock">Số lượng*</label>
                                                 <input class="form-control" name="stock" id="stock"
-                                                    placeholder="Nhập số lượng..." required />
+                                                    placeholder="Nhập số lượng..." />
+                                                    <span class="error-message text-danger"></span>
+
                                             </div>
                                             <div class="form-group">
                                                 <label for="image">Hình ảnh</label>
@@ -159,42 +162,56 @@ class Create extends BaseView
                                                 <label for="short_description">Mô tả ngắn</label>
                                                 <textarea class="form-control" name="short_description" id="short_description_editor"
                                                     placeholder="Nhập mô tả ngắn..."></textarea>
+                                                    <span class="error-message text-danger"></span>
+
                                             </div>
                                             <div class="form-group">
                                                 <label for="is_feature">Nổi bật*</label>
                                                 <select class="select2 form-select shadow-none" style="width: 100%; height:36px;"
-                                                    id="is_feature" name="is_feature" required>
+                                                    id="is_feature" name="is_feature">
                                                     <option value="" selected disabled>Vui lòng chọn...</option>
                                                     <option value="1">Nổi bật</option>
                                                     <option value="0">Không</option>
                                                 </select>
+                                                <span class="error-message text-danger"></span>
+
                                             </div>
                                             <div class="form-group">
                                                 <label for="status">Trạng thái*</label>
                                                 <select class="select2 form-select shadow-none" style="width: 100%; height:36px;"
-                                                    id="status" name="status" required>
+                                                    id="status" name="status">
                                                     <option value="" selected disabled>Vui lòng chọn...</option>
                                                     <option value="available">Còn hàng</option>
                                                     <option value="out_of_stock">Hết hàng</option>
                                                     <option value="discontinued">Ngừng hoạt động</option>
                                                 </select>
+                                                <span class="error-message text-danger"></span>
+
                                             </div>
                                             <div class="form-group row">
                                                 <div class="form-group col-md-3">
                                                     <label for="length">Chiều dài (cm)*</label>
-                                                    <input type="number" class="form-control" id="length" placeholder="Nhập chiều dài..." name="length" required>
+                                                    <input type="number" class="form-control" id="length" placeholder="Nhập chiều dài..." name="length">
+                                                    <span class="error-message text-danger"></span>
+                                                
                                                 </div>
                                                 <div class="form-group col-md-3">
                                                     <label for="width">Chiều rộng (cm)*</label>
-                                                    <input type="number" class="form-control" id="width" placeholder="Nhập chiều rộng..." name="width" required>
+                                                    <input type="number" class="form-control" id="width" placeholder="Nhập chiều rộng..." name="width">
+                                                    <span class="error-message text-danger"></span>
+                                                
                                                 </div>
                                                 <div class="form-group col-md-3">
                                                     <label for="height">Chiều cao (cm)*</label>
-                                                    <input type="number" class="form-control" id="height" placeholder="Nhập chiều cao..." name="height" required>
+                                                    <input type="number" class="form-control" id="height" placeholder="Nhập chiều cao..." name="height">
+                                                    <span class="error-message text-danger"></span>
+                                                
                                                 </div>
                                                 <div class="form-group col-md-3">
                                                     <label for="weight">Cân nặng (g)*</label>
-                                                    <input type="number" step="0.01" class="form-control" id="weight" placeholder="Nhập cân nặng..." name="weight" required>
+                                                    <input type="number" step="0.01" class="form-control" id="weight" placeholder="Nhập cân nặng..." name="weight">
+                                                    <span class="error-message text-danger"></span>
+                                                
                                                 </div>
                                             </div>
 
@@ -231,6 +248,7 @@ class Create extends BaseView
             </div>
 
 
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
             <script>
                 // Initialize CKEditor on each textarea with a unique ID
@@ -246,27 +264,13 @@ class Create extends BaseView
                         console.error(error);
                     });
 
-                ClassicEditor
-                    .create(document.querySelector('#how_to_use_editor'))
-                    .catch(error => {
-                        console.error(error);
-                    });
 
-                document.getElementById('variant_button').addEventListener('click', function() {
-                    var variantFields = document.getElementById('variant_fields');
-
-                    // Toggle hiển thị/ẩn các trường nhập liệu cho biến thể
-                    if (variantFields.style.display === 'none' || variantFields.style.display === '') {
-                        variantFields.style.display = 'block';
-                    } else {
-                        variantFields.style.display = 'none';
-                    }
-                });
 
 
 
                 $(document).ready(function() {
                     $(".form-horizontal").submit(function(event) {
+                        
                         let isValid = true;
 
                         // Reset lỗi cũ
@@ -276,6 +280,60 @@ class Create extends BaseView
                         let name = $("#name").val().trim();
                         if (name === "") {
                             $("#name").next(".error-message").text("Vui lòng nhập tên sản phẩm");
+                            isValid = false;
+                        }
+
+                        let category_id = $("#category_id").val();
+                        if (category_id === null) {
+                            $("#category_id").next(".error-message").text("Vui lòng nhập loại sản phẩm");
+                            isValid = false;
+                        }
+
+                        // let long_description = $("#long_description").val().trim();
+                        // if (long_description === "") {
+                        //     $("#long_description").next(".error-message").text("Vui lòng nhập mô tả dài");
+                        //     isValid = false;
+                        // }
+
+                        // let short_description = $("#short_description").val().trim();
+                        // if (short_description === "") {
+                        //     $("#short_description").next(".error-message").text("Vui lòng nhập mô tả");
+                        //     isValid = false;
+                        // }
+
+                        let status = $("#status").val();
+                        if (status === null) {
+                            $("#status").next(".error-message").text("Vui lòng nhập trạng thái");
+                            isValid = false;
+                        }
+
+                        let is_feature = $("#is_feature").val();
+                        if (is_feature === null) {
+                            $("#is_feature").next(".error-message").text("Vui lòng chọn nổi bật hay không");
+                            isValid = false;
+                        }
+
+                        let length = $("#length").val().trim();
+                        if (length === "") {
+                            $("#length").next(".error-message").text("Vui lòng chọn chiều dài");
+                            isValid = false;
+                        }
+
+                        let width = $("#width").val().trim();
+                        if (width === "") {
+                            $("#width").next(".error-message").text("Vui lòng chọn chiều rộng");
+                            isValid = false;
+                        }
+
+                        let height = $("#height").val().trim();
+                        if (height === "") {
+                            $("#height").next(".error-message").text("Vui lòng chọn chiều cao");
+                            isValid = false;
+                        }
+
+                        let weight = $("#weight").val().trim();
+                        if (weight === "") {
+                            $("#weight").next(".error-message").text("Vui lòng chọn cân nặng");
                             isValid = false;
                         }
 

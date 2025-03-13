@@ -26,6 +26,7 @@ Route::get('/', 'App\Controllers\Client\HomeController@index');
 Route::get('/products', 'App\Controllers\Client\ProductController@index');
 Route::get('/products/{id}', 'App\Controllers\Client\ProductController@detail');
 Route::get('/products/categories/{id}', 'App\Controllers\Client\ProductController@getProductByCategory');
+Route::get('/search', 'App\Controllers\Client\HomeController@search');
 
 Route::get('/contact', 'App\Controllers\Client\ContactController@index');
 Route::post('/contact', 'App\Controllers\Client\ContactController@PostContact');
@@ -79,6 +80,8 @@ Route::get('/orders/history', 'App\Controllers\Client\OrderController@history');
 Route::get('/orders/history/search', 'App\Controllers\Client\OrderController@search');
 
 Route::get('/orders/success', 'App\Controllers\Client\OrderController@success');
+Route::get('/orders/cancel/{id}', 'App\Controllers\Client\OrderController@cancel');
+Route::post('/orders/cancel', 'App\Controllers\Client\OrderController@handleCancelOrder');
 
 
 
@@ -203,6 +206,7 @@ Route::delete('/admin/users/{id}', 'App\Controllers\Admin\UserController@delete'
 // GET /users (lấy danh sách đơn hàng)
 Route::get('/admin/orders', 'App\Controllers\Admin\OrderController@index');
 Route::get('/admin/orders/details/{id}', 'App\Controllers\Admin\OrderController@detail');
+Route::get('/orders/search', 'App\Controllers\Admin\OrderController@search');
 
 
 // GET /users/create (hiển thị form thêm người dùng)

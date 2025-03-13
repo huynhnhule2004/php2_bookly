@@ -124,7 +124,8 @@ class Checkout extends BaseView
                             </div>
                             <div class="mb-3">
                                 <label for="address" class="form-label">Địa Chỉ</label>
-                                <input type="text" class="form-control" name="address" id="address">
+                                <input type="text" class="form-control"  id="address">
+                                <input type="hidden" name="address" id="hiddenAddress">
                                 <span id="address-error" style="color: red; display: none;"></span>
                             </div>
 
@@ -134,7 +135,7 @@ class Checkout extends BaseView
                                 <select class="form-select" id="paymentMethod" name="payment_method">
                                     <option value="">Chọn phương thức</option>
                                     <option value="COD">Thanh toán khi nhận hàng</option>
-                                    <option value="Online payment">Thanh toán MOMO</option>
+                                    <!-- <option value="Online payment">Thanh toán MOMO</option> -->
                                     <option value="VNPAY">Thanh toán VNPAY</option>
                                 </select>
                                 <span id="payment-error" style="color: red; display: none;"></span>
@@ -675,6 +676,25 @@ class Checkout extends BaseView
                         // Nếu số điện thoại hợp lệ, ẩn thông báo lỗi (nếu có)
                         errorDiv.style.display = "none";
                     }
+                });
+
+                function updateHiddenAddress() {
+                    // Lấy giá trị từ các trường
+                    const addressDetail = $("#address").val(); // Địa chỉ chi tiết do người dùng nhập
+                    const tinh = $("#tinh option:selected").text();
+                    const quan = $("#quan option:selected").text();
+                    const phuong = $("#phuong option:selected").text();
+
+                    // Kiểm tra giá trị và ghép địa chỉ
+                    const fullAddress = `${addressDetail} ${tinh !== "Tỉnh Thành" ? tinh : ""} ${quan !== "Quận Huyện" ? quan : ""} ${phuong !== "Phường Xã" ? phuong : ""}`;
+
+                    // Cập nhật vào ô input ẩn
+                    $("#hiddenAddress").val(fullAddress.trim());
+                }
+
+                // Gọi hàm này khi người dùng thay đổi hoặc nhập vào bất kỳ trường nào
+                $("#tinh, #quan, #phuong, #address").on("change keyup", function() {
+                    updateHiddenAddress();
                 });
             </script>
 <?php

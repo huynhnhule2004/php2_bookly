@@ -145,35 +145,71 @@ class Search extends BaseView
                         <?php } ?>
                     </tbody>
                 </table>
+                <style>
+                    .custom-pagination {
+                        display: flex;
+                        justify-content: center;
+                        list-style: none;
+                        padding: 10px 0;
+                    }
+
+                    .custom-pagination li {
+                        margin: 0 5px;
+                    }
+
+                    .custom-pagination li a {
+                        display: block;
+                        padding: 8px 15px;
+                        background: #f8f9fa;
+                        color: #333;
+                        text-decoration: none;
+                        border-radius: 5px;
+                        border: 1px solid #ddd;
+                        transition: all 0.3s ease;
+                    }
+
+                    .custom-pagination li a:hover {
+                        background: var(--primary-color);
+                        color: #fff;
+                    }
+
+                    .custom-pagination li.active a {
+                        background: var(--primary-color);
+                        color: #fff;
+                        font-weight: bold;
+                        border: 1px solid var(--primary-color);
+                    }
+                </style>
                 <!-- Pagination -->
                 <?php if ($totalPages > 1) : ?>
-                    <div class="pagination">
-                        <nav aria-label="Page navigation">
-                            <ul class="pagination justify-content-center">
-                                <?php if ($currentPage > 1) : ?>
-                                    <li class="page-item">
-                                        <a class="page-link" href="?page=<?= $currentPage - 1 ?>&keyword=<?= urlencode($_GET['keyword']) ?>" aria-label="Previous">
-                                            <span aria-hidden="true">&laquo;</span>
-                                        </a>
-                                    </li>
-                                <?php endif; ?>
+                    <nav aria-label="Page navigation">
+                        <ul class="custom-pagination">
+                            <!-- Nút Previous -->
+                            <?php if ($currentPage > 1) : ?>
+                                <li>
+                                    <a href="?page=<?= $currentPage - 1 ?>" aria-label="Previous">
+                                        <span>&laquo;</span>
+                                    </a>
+                                </li>
+                            <?php endif; ?>
 
-                                <?php for ($i = 1; $i <= $totalPages; $i++) : ?>
-                                    <li class="page-item <?= ($i == $currentPage) ? 'active' : '' ?>">
-                                        <a class="page-link" href="?page=<?= $i ?>&keyword=<?= urlencode($_GET['keyword']) ?>"><?= $i ?></a>
-                                    </li>
-                                <?php endfor; ?>
+                            <!-- Các số trang -->
+                            <?php for ($i = 1; $i <= $totalPages; $i++) : ?>
+                                <li class="<?= ($i == $currentPage) ? 'active' : '' ?>">
+                                    <a href="?page=<?= $i ?>"><?= $i ?></a>
+                                </li>
+                            <?php endfor; ?>
 
-                                <?php if ($currentPage < $totalPages) : ?>
-                                    <li class="page-item">
-                                        <a class="page-link" href="?page=<?= $currentPage + 1 ?>&keyword=<?= urlencode($_GET['keyword']) ?>" aria-label="Next">
-                                            <span aria-hidden="true">&raquo;</span>
-                                        </a>
-                                    </li>
-                                <?php endif; ?>
-                            </ul>
-                        </nav>
-                    </div>
+                            <!-- Nút Next -->
+                            <?php if ($currentPage < $totalPages) : ?>
+                                <li>
+                                    <a href="?page=<?= $currentPage + 1 ?>" aria-label="Next">
+                                        <span>&raquo;</span>
+                                    </a>
+                                </li>
+                            <?php endif; ?>
+                        </ul>
+                    </nav>
                 <?php endif; ?>
             <?php } else { ?>
                 <div class="alert alert-info">

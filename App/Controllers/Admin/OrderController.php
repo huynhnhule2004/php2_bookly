@@ -219,9 +219,6 @@ class OrderController
     }
     
     
-    
-
-
     // thực hiện xoá
     public static function delete(int $id)
     {

@@ -165,5 +165,32 @@ abstract class BaseModel implements CrudInterface
         }
     }
 
-   
+    public function updateStatus(int $id, string $status)
+    {
+        try {
+            $sql = "UPDATE orders SET status = ? WHERE id = ?";
+    
+            // Kết nối đến cơ sở dữ liệu
+            $conn = $this->_conn->MySQLi();
+            $stmt = $conn->prepare($sql);
+    
+            if (!$stmt) {
+                throw new Exception("Lỗi chuẩn bị truy vấn: " . $conn->error);
+            }
+    
+            // Gán giá trị vào truy vấn
+            $stmt->bind_param("si", $status, $id);
+    
+            // Thực thi truy vấn
+            if (!$stmt->execute()) {
+                throw new Exception("Lỗi khi thực thi truy vấn: " . $stmt->error);
+            }
+    
+            return true;
+        } catch (\Throwable $th) {
+            error_log('Lỗi khi cập nhật trạng thái: ' . $th->getMessage());
+            return false;
+        }
+    }
+    
 }

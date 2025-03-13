@@ -13,12 +13,14 @@ use App\Models\Product;
 use App\Models\User;
 use App\Views\Client\Components\Notification;
 use App\Views\Client\Layouts\Footer;
+use App\Views\Client\Pages\Order\Cancel;
 use App\Views\Client\Pages\Order\History;
 use App\Views\Client\Pages\Order\Index;
 use App\Views\Client\Layouts\Header;
 use App\Views\Client\Pages\Order\Success;
 use App\Views\Client\Pages\Order\Detail;
 use App\Views\Client\Pages\Order\Search;
+use \Exception;
 
 class OrderController
 {
@@ -89,7 +91,9 @@ class OrderController
 
         if ($result && isset($result['response']['data']['order_code'])) {
 
-            NotificationHelper::success('ordered', "Đơn hàng đã tạo thành công! Mã đơn: " . $result['response']['data']['order_code']);
+            // NotificationHelper::success('ordered', "Đơn hàng đã tạo thành công! Mã đơn: " . $result['response']['data']['order_code']);
+            NotificationHelper::success('ordered', "Đơn hàng đã tạo thành công!");
+
         } else {
             NotificationHelper::error('order', "Không thể tạo đơn hàng");
 
@@ -111,26 +115,26 @@ class OrderController
             $qty = (int) $qtyArray[$i]; // Chuyển thành số nguyên
             $price = (float) trim($priceArray[$i]); // Chuyển thành số thực
             $product_id = isset($product_id_array[$i]) ? (int) $product_id_array[$i] : 0;
-        
+
             if ($product_id === 0) {
                 die("Lỗi: product_id không hợp lệ");
             }
-        
+
             $data_order_detail = [
                 'order_id' => $results,
                 'product_id' => $product_id,
                 'quantity' => $qty,
                 'price' => $price,
             ];
-        
+
             // Thêm vào bảng order_detail
             $action = $order_detail->createOrderDetail($data_order_detail);
-        
+
             // Trừ số lượng tồn kho (ÉP KIỂU)
             $product = new Product();
             $product->decreaseStock((int) $product_id, quantity: (int) $qty);
         }
-         
+
         // Lấy phương thức thanh toán từ POST
         $paymentMethod = $_POST['payment_method'] ?? null;
 
@@ -321,7 +325,6 @@ class OrderController
         }
     }
 
-
     public function success()
     {
         // Kiểm tra và lấy giá trị từ $_GET với fallback tránh lỗi Undefined Index
@@ -405,7 +408,6 @@ class OrderController
         Success::render($data);
     }
 
-
     public function history()
     {
         $category = new Category();
@@ -451,10 +453,11 @@ class OrderController
 
         // Hiển thị giao diện
         Header::render(['categories' => $categories]);
+        Notification::render();
+        NotificationHelper::unset();
         History::render($pageData, $currentPage, $itemsPerPage, $totalItems);
         Footer::render();
     }
-
 
     public static function detail($id)
     {
@@ -632,6 +635,67 @@ class OrderController
         } catch (\Exception $e) {
             echo 'Lỗi Exception: ' . $e->getMessage();
             return null;
+        }
+    }
+
+    public static function cancel($id)
+    {
+        $order = new Order();
+        $data_order = $order->getOne($id);
+        $cancel_reasons = [
+            "Tôi không muốn mua nữa",
+            "Tìm thấy giá tốt hơn ở nơi khác",
+            "Thời gian giao hàng quá lâu",
+            "Đặt nhầm sản phẩm",
+            "Shop không phản hồi yêu cầu",
+            "Lý do khác"
+        ];
+        $data = [
+            'order' => $data_order,
+            'cancel_reasons' => $cancel_reasons
+        ];
+        // var_dump($data);
+        // header('location: /orders/history');
+        Header::render();
+        Cancel::render($data);
+        Footer::render();
+    }
+
+    public function handleCancelOrder()
+    {
+        try {
+            $order = new Order();
+
+            if (!isset($_POST['order_id'], $_POST['order_code'])) {
+                throw new Exception('Dữ liệu không hợp lệ');
+            }
+
+            $order_id = (int) $_POST['order_id'];
+            $order_code = trim($_POST['order_code']);
+
+            $result = $order->getOneOrderByIdAndStatus($order_id);
+            if (!$result) {
+                throw new Exception('Đơn hàng không hợp lệ hoặc không thể hủy');
+            }
+
+            $ghn = new GHNService();
+            $ghn_response = $ghn->cancelOrderGHN($order_code);
+
+            if (empty($ghn_response['success']) || !$ghn_response['success']) {
+                throw new Exception('GHN từ chối hủy đơn: ' . ($ghn_response['message'] ?? 'Lỗi không xác định'));
+            }
+
+            if (!$order->updateStatus($order_id, 'Cancelled')) {
+                throw new Exception('Không thể cập nhật trạng thái đơn hàng');
+            }
+
+            NotificationHelper::success('order', 'Đơn hàng đã được hủy thành công');
+            header('Location: /orders/history');
+            exit;
+        } catch (Exception $e) {
+            NotificationHelper::error('order', $e->getMessage());
+            header('Location: /orders/history');
+            exit;
         }
     }
 }

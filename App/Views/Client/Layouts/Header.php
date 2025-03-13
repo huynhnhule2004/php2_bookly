@@ -185,10 +185,14 @@ class Header extends BaseView
 
             <div class="search-popup">
                 <div class="search-popup-container">
-
-                    <form role="search" method="get" class="search-form" action="">
-                        <input type="search" id="search-form" class="search-field" placeholder="Tìm kiếm..." value=""
-                            name="s" />
+                    <!-- <form id="search-form" class="text-center d-flex align-items-center" action="/search" method="GET">
+                        <input type="text" class="form-control border-0 bg-transparent" placeholder="Search Here" value="<?= $_GET['keyword'] ?? '' ?>" name="keyword" />
+                        <iconify-icon icon="tabler:search" class="fs-4 me-3"></iconify-icon>
+                        <button type="submit">Search</button>
+                    </form> -->
+                    <form role="search" method="get" class="search-form" action="/search">
+                        <input type="search" id="search-form" class="search-field" placeholder="Tìm kiếm..." value="<?= $_GET['keyword'] ?? '' ?>"
+                        name="keyword" />
                         <button type="submit" class="search-submit" style="top: 64px;">
                             <!-- <svg class="search">
                                 <use xlink:href="#search"></use>
@@ -286,7 +290,7 @@ class Header extends BaseView
                                                     <a class="dropdown-item m-0" href="/users/<?= $_SESSION['user']['id'] ?>" style="font-size: medium;"><?= $_SESSION['user']['username'] ?></a>
                                                     <a class="dropdown-item m-0" href="/change-password" style="font-size: medium;">Đổi mật khẩu</a>
                                                     <a class="dropdown-item m-0" href="/orders/history"
-                                                            style="font-size: medium;">Lịch sử mua hàng</a>
+                                                        style="font-size: medium;">Lịch sử mua hàng</a>
                                                     <a class="dropdown-item m-0" href="/logout" style="font-size: medium;">Đăng xuất</a>
                                                 </div>
                                             </li>

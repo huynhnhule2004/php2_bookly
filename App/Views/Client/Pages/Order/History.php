@@ -140,10 +140,15 @@ class History extends BaseView
                                     ?>
                                 </td>
                                 <td><?php echo number_format($order['total_price'], 0, ',', '.'); ?> VNĐ</td>
-                                <td>
+                                <td style="white-space: nowrap;">
                                     <a href="/orders/<?php echo htmlspecialchars($order['id']); ?>" class="btn btn-primary btn-sm" style="padding: 10px">
                                         Xem Chi Tiết
                                     </a>
+                                    <?php if ($order['status'] === 'Pending') : ?>
+                                        <a href="/orders/cancel/<?php echo htmlspecialchars($order['id']); ?>" class="btn btn-danger btn-sm" style="padding: 10px">
+                                            Hủy
+                                        </a>
+                                    <?php endif; ?>
                                 </td>
                             </tr>
                         <?php } ?>

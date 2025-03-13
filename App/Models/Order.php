@@ -211,7 +211,7 @@ class Order extends BaseModel
     {
         $result = [];
         try {
-            $sql = "SELECT o.*, u.first_name 
+            $sql = "SELECT o.*, u.name 
                     FROM orders o
                     JOIN users u 
                     ON o.user_id = u.id
@@ -233,6 +233,23 @@ class Order extends BaseModel
             return $result->fetch_all(MYSQLI_ASSOC);
         } catch (\Throwable $th) {
             error_log('Lỗi khi hiển thị tất cả dữ liệu: ' . $th->getMessage());
+            return $result;
+        }
+    }
+
+    public function getOneOrderByIdAndStatus(int $id, $status = 'Pending')
+    {
+        $result = [];
+        try {
+            $sql = "SELECT * FROM $this->table WHERE $this->id=? AND status = '$status'";
+            $conn = $this->_conn->MySQLi();
+            $stmt = $conn->prepare($sql);
+
+            $stmt->bind_param('i', $id);
+            $stmt->execute();
+            return $stmt->get_result()->fetch_assoc();
+        } catch (\Throwable $th) {
+            error_log('Lỗi khi hiển thị chi tiết dữ liệu: ' . $th->getMessage());
             return $result;
         }
     }

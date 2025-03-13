@@ -7,12 +7,14 @@ class GHNService extends BaseModel
     private $token;
     private $apiUrl;
     private $shopId;
+    private $cancelOrder;
 
     public function __construct()
     {
         $this->token = $_ENV['ghn_api_token'] ?? '';
         $this->apiUrl = $_ENV['api_ghn'] ?? '';
         $this->shopId = $_ENV['ghn_shop_id'] ?? '';
+        $this->cancelOrder = $_ENV['api_cancel_order_ghn'] ?? '';
     }
 
     public function getToken()
@@ -161,6 +163,28 @@ class GHNService extends BaseModel
 
     }
 
-
+    public function cancelOrderGHN($order_code) {
+        $postData = json_encode(['order_codes' => [$order_code]]);
+    
+        $ch = curl_init($this->cancelOrder);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            "Content-Type: application/json",
+            "Token: {$this->token}",
+            "ShopId: {$this->shopId}"
+        ]);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+    
+        $response = curl_exec($ch);
+        curl_close($ch);
+    
+        $result = json_decode($response, true);
+        if (!empty($result['code']) && $result['code'] == 200) {
+            return ['success' => true];
+        }
+    
+        return ['success' => false, 'message' => $result['message'] ?? 'Lỗi không xác định'];
+    }
 }
 

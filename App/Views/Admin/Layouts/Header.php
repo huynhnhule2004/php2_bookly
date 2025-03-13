@@ -555,13 +555,13 @@ class Header extends BaseView
                                             aria-expanded="false">
                                             <div class="avatar-sm">
                                                 <img
-                                                    src="<?= APP_URL ?>/public/assets/assets/img/profile.jpg"
+                                                    src="<?= APP_URL ?>/public/uploads/users/<?= $_SESSION['user']['avatar']?>"
                                                     alt="..."
                                                     class="avatar-img rounded-circle" />
                                             </div>
                                             <span class="profile-username">
                                                 <span class="op-7">Hi,</span>
-                                                <span class="fw-bold">Huỳnh Như</span>
+                                                <span class="fw-bold"><?php echo isset($_SESSION['user']['username']) ? htmlspecialchars($_SESSION['user']['username']) : 'Guest'; ?></span>
                                             </span>
                                         </a>
                                         <ul class="dropdown-menu dropdown-user animated fadeIn">

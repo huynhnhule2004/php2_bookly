@@ -212,7 +212,7 @@ class Home extends BaseView
                                         <?php endif; ?>
 
                                         <div class="card-concern position-absolute start-0 end-0 d-flex gap-2">
-                                        <form action="/cart/add" method="post">
+                                            <form action="/cart/add" method="post">
                                                 <input type="hidden" name="method" id="" value="POST">
                                                 <input type="hidden" name="id" id="" value="<?= $item['id'] ?>" required>
                                                 <input type="hidden" id="quantity" name="quantity" value="1" min="1">
@@ -677,34 +677,24 @@ class Home extends BaseView
                     <h3 class="d-flex align-items-center">Danh mục</h3>
                 </div>
                 <div class="row">
-                    <div class="col-md-4">
-                        <div class="card mb-4 border-0 rounded-3 position-relative">
-                            <a href="/products">
-                                <img src="<?= APP_URL ?>/public/assets/client/images/category1.jpg" class="img-fluid rounded-3" alt="cart item">
-                                <h6 class=" position-absolute bottom-0 bg-primary m-4 py-2 px-3 rounded-3"><a href="/products"
-                                        class="text-white">Sách</a></h6>
-                            </a>
+                    <?php
+                    $categories = $data['categories'];
+
+                    foreach ($categories as $category) :
+                    ?>
+                        <div class="col-md-4">
+                            <div class="card text-center mb-4 border-0 rounded-3 position-relative">
+                                <a href="/products">
+                                    <img src="<?= APP_URL ?>/public/uploads/products/<?= $category['image'] ?>" class="img-fluid rounded-3" alt="<?= $category['category_name'] ?>">
+                                    <h6 class="position-absolute bottom-0 bg-primary m-4 py-2 px-3 rounded-3">
+                                        <a href="/products" class="text-white"><?= $category['category_name'] ?></a>
+                                    </h6>
+                                </a>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card text-center mb-4 border-0 rounded-3">
-                            <a href="/products">
-                                <img src="<?= APP_URL ?>/public/assets/client/images/category2.jpg" class="img-fluid rounded-3" alt="cart item">
-                                <h6 class=" position-absolute bottom-0 bg-primary m-4 py-2 px-3 rounded-3"><a href="/products"
-                                        class="text-white">Giấy và sổ</a></h6>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card text-center mb-4 border-0 rounded-3">
-                            <a href="/products">
-                                <img src="<?= APP_URL ?>/public/assets/client/images/category3.jpg" class="img-fluid rounded-3" alt="cart item">
-                                <h6 class=" position-absolute bottom-0 bg-primary m-4 py-2 px-3 rounded-3"><a href="/products"
-                                        class="text-white">Dụng cụ trang trí</a></h6>
-                            </a>
-                        </div>
-                    </div>
+                    <?php endforeach; ?>
                 </div>
+
             </div>
         </section>
 

@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use App\Models\Order;
 use App\Models\User;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -341,12 +342,14 @@ class AuthHelper
 
         // Tạo nội dung chi tiết sản phẩm trong email cho khách hàng
         ob_start();
+        $order = new Order();
+        $result = $order->getOne($orderId);
+        $address = $result['shipping_address'];
 ?>
         <table style="border-collapse: collapse;" border="1">
             <thead>
                 <tr>
                     <th>Tên sản phẩm</th>
-                    <th>Kích thước/ Trọng lượng</th>
                     <th>Giá</th>
                     <th>Số lượng</th>
                     <th>Tổng</th>
@@ -355,8 +358,7 @@ class AuthHelper
             <tbody>
                 <?php foreach ($details as $product) : ?>
                     <tr>
-                        <td><?= htmlspecialchars($product['product_name']) ?></td>
-                        <td><?= htmlspecialchars($product['variant_name']) ?></td>
+                        <td><?= htmlspecialchars($product['name']) ?></td>
                         <td><?= number_format($product['price'], 0, ',', '.') ?> VNĐ</td>
                         <td><?= htmlspecialchars($product['quantity']) ?></td>
                         <td><?= number_format($product['price'] * $product['quantity'], 0, ',', '.') ?> VNĐ</td>
@@ -427,6 +429,7 @@ class AuthHelper
             <ul>
                 <li><strong>Mã đơn hàng:</strong> $orderId</li>
                 <li><strong>Ngày đặt hàng:</strong> $orderDate</li>
+                <li><strong>Địa chỉ:</strong> $address</li>
                 <li><strong>Phương thức thanh toán:</strong> $paymentMethod</li>
                 <li><strong>Trạng thái thanh toán:</strong> Đã thanh toán</li>
                 <li><strong>Tổng giá trị đơn hàng:</strong> " . number_format($totalAmount, 0, ',', '.') . " VNĐ</li>
@@ -516,6 +519,7 @@ class AuthHelper
                         <li><strong>Mã đơn hàng:</strong> $orderId</li>
                         <li><strong>Tên khách hàng:</strong> $name</li>
                         <li><strong>Ngày đặt hàng:</strong> $orderDate</li>
+                        <li><strong>Địa chỉ:</strong> $address</li>
                         <li><strong>Phương thức thanh toán:</strong> $paymentMethod</li>
                         <li><strong>Trạng thái thanh toán:</strong> Đã thanh toán</li>
                         <li><strong>Tổng giá trị đơn hàng:</strong> " . number_format($totalAmount) . " VNĐ</li>
